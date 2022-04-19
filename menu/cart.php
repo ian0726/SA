@@ -7,7 +7,6 @@
 <head>
     <meta charset="UTF-8">
     <title>購物車</title>
-    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
     <style>
         body{
             background-color: rgba(0, 0, 0,.2);
@@ -68,19 +67,18 @@
                 $sql = "SELECT * FROM cart WHERE user_id = '".$user_id."'";
                 $rs = mysqli_query($con, $sql);
                 while($row = mysqli_fetch_assoc($rs)){
-                
                     echo "
                     <div class='item_header item_body'>           
                             <div class='name'><span></span> <td>".$row['itemfullname']."<br /></div>
                             <div class='note'><span></span> <td>".$row['note']."<br /></div>
-                            <div class='count'>
-                                <button @click='handleSub(item)'>-</button>
-                                ".$row['amount']."
-                                <button @click='handlePlus(item)'>+</button>
-                            </div> 
+                            <div class='count'>".$row['amount']."</div> 
                             <div class='amount'><strong>TOTAL: $".$row['totalp']."</strong></div>
                             <div class='operate'>
-                                <button @click='handledelete(index)'>刪除</button>
+                                <form action='cartdel.php' method = 'post'>
+                                    <input type='hidden' name = 'user_id' value = '".$user_id."'>
+                                    <input type='hidden' name = 'full' value='".$row['itemfullname']."'>
+                                    <input type='submit' value = '刪除'>
+                                </form>
                             </div>
                     </div>     
                     ";
@@ -92,5 +90,5 @@
         </div>
     </div>
 </body>
-<script src="main.js"></script>
+
 </html>
