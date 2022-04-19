@@ -55,9 +55,9 @@
 <div class="cart">
     <div class = "title">購物車</div>
     <div id="app">
+        
         <div class="container">
             <div class="item_header">
-                <div class="item_detail">照片</div>
                 <div class="name">商品及細項</div>
                 <div class="note">備註</div>
                 <div class="count">數量</div> 
@@ -70,28 +70,19 @@
                 while($row = mysqli_fetch_assoc($rs)){
                 
                     echo "
-                    <div class='item_container' v-for='(item, index) in itemList' :key='item.id' >
-                    <div class='item_header item_body'>
-                            <div class='item_detail'>
-                            <td>
-                            <img src='".$row['img']."' alt='img' height='40' />
-                            </td>
-                            </div>
+                    <div class='item_header item_body'>           
                             <div class='name'><span></span> <td>".$row['itemfullname']."<br /></div>
                             <div class='note'><span></span> <td>".$row['note']."<br /></div>
-                            <div class='count'><span></span> <td>".$row['amount']."<br /></div>
-                            <div class='amount'><span></span> <td>".$row['totalp']."<br /></div>
                             <div class='count'>
                                 <button @click='handleSub(item)'>-</button>
-                                1
+                                ".$row['amount']."
                                 <button @click='handlePlus(item)'>+</button>
                             </div> 
-                            <div class='amount'><strong>TOTAL: <?php echo '$'.$total_price; ?></strong></div>
+                            <div class='amount'><strong>TOTAL: $".$row['totalp']."</strong></div>
                             <div class='operate'>
                                 <button @click='handledelete(index)'>刪除</button>
                             </div>
-                    </div>
-            </div>
+                    </div>     
                     ";
                 }
 
