@@ -68,7 +68,7 @@
                 <a class="nav-link" href="index.html">首頁 </a>
               </li>
               <li class="nav-item active">
-                <a class="nav-link" href="menu.html">菜單 <span class="sr-only">(current)</span> </a>
+                <a class="nav-link" href="menu.php">菜單 <span class="sr-only">(current)</span> </a>
               </li>
               <!--ADD MORE ITEMS IN NAV BAR HERE-->
               <!-- 

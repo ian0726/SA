@@ -10,7 +10,7 @@
     $price=$_POST['price'];
     $user_id=$_POST['user_id'];
     $total = $price * $amount;
-
+    
     if(isset($sauce) && isset($side)){
         $full = $name." ".$side." ".$sauce;
     }
@@ -28,8 +28,7 @@
     if(mysqli_num_rows($rs) == 0){
         $sql = "INSERT INTO cart (`user_id`, item_id, itemfullname, amount, note, totalp) VALUES ('$user_id', '$id', '$full', '$amount', '$note', '$total');";
         if(mysqli_query($con, $sql)){
-            echo $sql;
-            echo "added successfully";
+            header("Location: menu.php?message=成功加入購物車");
         }
     }
     #if exist
@@ -41,7 +40,7 @@
                 $same = 1;
                 $sql = "UPDATE cart SET amount = $amount, totalp = $total
                 WHERE `user_id` = '".$user_id."' AND itemfullname = '".$full."';";
-                if(mysqli_query($con, $sql)){#WHERE DID THIS GO WRONG I CANT SEE
+                if(mysqli_query($con, $sql)){
                     header("Location: menu.php?message=成功更新購物車");
                 }
                 
@@ -60,7 +59,6 @@
         
     }
 
-    
 
 
     mysqli_close($con);

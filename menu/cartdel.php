@@ -9,4 +9,6 @@
         echo "successfully deleted";
         header("Location: cart.php?message=成功刪除");
     }
+
+    mysqli_close($con);
 ?>
