@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>輔大人事室</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="Mystyle.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top" >
+    <a class="navbar-brand" href="https://www.fju.edu.tw/">FJCU</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="單位年薪.html">單位年薪<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="專任教師鐘點.html">專任教師鐘點</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="兼任教師鐘點.html">兼任教師鐘點</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="年度報表.html">年度報表</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">首頁</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">menuItem</a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+</nav>
+<div class="wrapper">
+    
+<br>
+<br>
+<br>
+<div class="container">
+<h1><b>單位年薪</b></h1>
+<hr>
+<form>
+        
+    <div class="form-group">
+    
+        <label>姓名:</label>
+        <input type="text" name="name"  value="蔡明志" required="">
+        <label>職稱:</label>
+        <input list="ranks" name="rank"  required="">
+        <datalist id="ranks">
+            <option value="系主任">
+            <option value="教授">
+            <option value="副教授">
+            <option value="助理教授">
+            <option value="特聘教授">
+            <option value="助教">    
+            <option value="專案老師">
+            <option value="工讀生"> 
+        </datalist>
+        <label>俸點:</label>
+        <input type="text" name="wage0"  value="0" required="">
+        <label>本俸(月):</label>
+        <input type="text" name="wage1"  value="1" required="">
+        <br>
+        <label>學術研究費或專業加給(月):</label>
+        <input type="text" name="wage2"  value="1" required="">
+        <label>特別補助費(月):</label>
+        <input type="text" name="wage3"  value="3" required="">
+        <label>子女補助費(月):</label>
+        <input type="text" name="wage4"  value="4" required="">
+        <br>
+        <label>其他收入(月):</label>
+        <input type="text" name="wage5"  value="5" required="">
+        <label>主管特支費(月):</label>
+        <input type="text" name="wage6"  value="6" required="">
+        <label>年支領月數:</label>
+        <input type="text" name="wage7"  value="7" required="">
+        <br>
+        <label>預算類別:</label>
+        <input list="kinds" name="kind0" required="">
+
+        <datalist id="kinds">
+            <option value="專任">
+            <option value="兼任">
+            <option value="行政">
+            <option value="計時">
+            <option value="助理">
+            <option value="特聘">
+            <option value="助教">    
+            <option value="專案">
+            <option value="工讀生"> 
+        </datalist>
+        <label>預算類別:</label>
+        <input list="kinds1" name="kind1" required="">
+        <datalist id="kinds1">
+            <option value="專任職員">
+            <option value="兼任職員">
+            <option value="計時人員">
+            <option value="助理職員">
+            <option value="特聘職員">
+            <option value="助教">    
+            <option value="行政職員">
+            <option value="工讀生"> 
+        </datalist>
+        <label>全年共計:</label>
+        <input type="text" name="total0" required="">
+        <label>備註:</label>
+        <input type="text" name="ps"  value="None" required="">
+        <br>
+        <label>隸屬單位:</label>
+        <input type="text" name="depar" value="資訊管理學系" required="">
+        <label>公建勞建:</label>
+        <input list="which" name="heal" required="">
+        <datalist id="which">
+            <option value="公建">
+            <option value="勞建">
+        </datalist>
+        
+    
+    </div>
+    
+
+    
+   
+    <button type="submit" class="btn btn-success save-btn">儲存</button>
+    
+</form>
+  <br/>
+  <table class="table table-bordered data-table">
+    <thead>
+        <th>姓名</th>
+        <th>職稱</th>
+        <th>俸點</th>
+        <th>本俸(月)</th>
+        <th>學術研究費或專業加給(月)</th>
+        <th>特別補助費(月)</th>
+        <th>子女補助費(月)</th>
+        <th>其他收入(月)</th>
+        <th>主管特支費(月)</th>
+        <th>年支領月數</th>
+        <th>預算類別</th>
+        <th>預算類別</th>
+        <th>全年共計</th>
+        <th>備註</th>
+        <th>隸屬單位</th>
+        <th>公建勞建</th>
+      <th width="80px">Action</th>
+    </thead>
+    <tbody>
+    
+    </tbody>
+  </table>
+   
+</div>
+</div>
+<footer class="bg-dark text-center text-white">
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+      © 2021 輔仁大學人事室 Copyright
+    </div>
+</footer>
+
+<script type="text/javascript" src="單位年薪js.js"></script>
+     
+</body>
+</html>
