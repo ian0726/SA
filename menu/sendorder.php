@@ -32,7 +32,7 @@
     }
 
     #get order id
-    $sql = "SELECT order_id FROM `order` WHERE `user_id` = '".$user_id."' AND rec_num = '".$rec_num."'";
+    $sql = "SELECT order_id FROM `order` WHERE `user_id` = '".$user_id."' AND date = '".$now."'";
     $rs = mysqli_query($con, $sql);
     $row = mysqli_fetch_assoc($rs);
     $order_id = $row['order_id'];
@@ -54,6 +54,7 @@
     $rs = mysqli_query($con, $sql);
     if(mysqli_query($con, $sql)){
         header("Location: menu.php?message=成功加入訂單及訂單細項和清除購物車");
+   
     }
     
 
