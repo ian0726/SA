@@ -1,16 +1,22 @@
 <?php
 session_start();
 $link=mysqli_connect("localhost","root","12345678","sa");
-if(isset($_POST["name"]) && isset($_POST["phone"]) && isset($_POST["date"]) && isset($_POST["people"])){
+if(isset($_POST["name"]) && isset($_POST["phone"]) && isset($_POST["time"]) && isset($_POST["people"])){
     $name=$_POST["name"];
     $phone=$_POST["phone"];
-    $date=$_POST["date"];
+    $time=$_POST["time"];
     $people=$_POST["people"];
+    #get date
+    date_default_timezone_set('Asia/Taipei');
+    $today=date('Y-m-d');
+    $now=date('Y-m-d H:i:s');
+    $nowsec=strtotime($now);
+
     
-    $sql="insert into register(name, phone , date, people) values ('$name', '$phone' , '$date','$people')";
+    $sql="insert into register(name, phone , time, people) values ('$name', '$phone' , '$now','$people')";
     $result=mysqli_query($link,$sql);
     if (isset($result)){
-        echo "<script>{window.alert('新增成功！'); location.href='register.php'}</script>";
+        echo "<script>{window.alert('新增成功！'); location.href='方禾食呂首頁.php'}</script>";
 }
 }
 ?>
@@ -48,75 +54,29 @@ if(isset($_POST["name"]) && isset($_POST["phone"]) && isset($_POST["date"]) && i
 
 </head>
 
-<body>
+<body style="background-color: 	#bdb76b;">
 
-  <div class="hero_area">
-    <!-- header section strats -->
-    <header class="header_section">
-      <div class="container">
-        <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="方禾食呂首頁.html">
-            <span>
-              方禾食呂
-            </span>
-          </a>
-
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class=""> </span>
-          </button>
-
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav  mx-auto ">
-              <li class="nav-item active">
-                <a class="nav-link" href="方禾食呂首頁.html">Home <span class="sr-only">(current)</span></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="menu.html">Menu</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="about.html">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="book.html">Book Table</a>
-              </li>
-            </ul>
-           
-              <form class="form-inline">
-                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
-                  <i class="fa fa-search" aria-hidden="true"></i>
-                </button>
-              </form>
-              <a href="" class="order_online">
-                登入
-              </a>
-              <a href="" class="order_online">
-                註冊
-              </a>
-            </div>
-          </div>
-        </nav>
-      </div>
-    </header>
-    <!-- end header section -->
-    <!-- slider section -->
+ 
     <div class="container-fluid">
 
         <!-- Page Heading -->
-        <h1 class="h3 mb-2 text-gray-800">登記候位</h1>
+        <br><br>
+        <center><h1 class="h3 mb-2 text-gray-800" style="font-family: Arial, Helvetica, sans-serif;font-weight:bold;color:white">登記候位</h1></center>
+        <br>
                 <!-- DataTales Example -->
                 <div class="card shadow mb-4">
                     <section class="ftco-section">
                         <div class="container">
                             <div class="row justify-content-center">
-                                 div class="col-md-6 text-center mb-4">
+                                 <div class="m-4 text-center mb-4 ml-4 mr-4">
                                     <form action="register.php" method="post"  class="d-none d-sm-inline-block form-inline mr-auto">
                                         <br>
-                                        姓名：<input type="text" name="name" value="<?php echo $row[0];?>" required><br>
-                                        電話：<input type="text" name="phone" value="<?php echo $row[1];?>" required><br>
-                                        時間：<input type="date" name="date" value="<?php echo $row[2];?>" required><br>
-                                        人數：<select name="people" style="width:205px"><option>1-2人</option><option>3-4人</option></select><br>
+                                        姓名：<input type="text" name="name" value="<?php echo $row[0];?>" required><br><br>
+                                        電話：<input type="text" name="phone" value="<?php echo $row[1];?>" required><br><br>
+                                        時間：<input type="date" name="time" value="<?php echo $row[2];?>" required ><br><br>
+                                        人數：<select name="people" style="width:205px"><option value="" hidden selected disabled>請選擇人數</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select><br>
                                         <br>
-                                        <input type="submit" class="btn btn-primary btn-user btn-block" value="登記">
+                                        <input type="submit"  class="btn btn-light border-0" style="background-color:#ffd700;color:white;font-weight:bold"value="登記">
                                     </form>
                     </section>
                 </div>
