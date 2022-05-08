@@ -7,7 +7,6 @@
 <head>
     <meta charset="UTF-8">
     <title>購物車</title>
-    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
     <style>
         body{
             background-color: rgba(241, 242, 243);
@@ -24,7 +23,7 @@
         }
         .item_header div{
             width: 200px;
-            color: #888;
+            color: #2e2e2e;
             line-height: 30px;
         }
         .item_header .item_detail{
@@ -125,30 +124,33 @@
         <div class="container">
             <div class="item_header">
                 <div class="name" style="color:white">商品及細項</div>
+                <div class="tablenum" style="color:white">桌號</div>
                 <div class="note" style="color:white">備註</div>
                 <div class="count" style="color:white">數量</div> 
                 <div class="amount" style="color:white">總計</div>
                 <div class="operate" style="color:white">操作</div>
             </div>
             <?php
+                $sum = 0;
                 $sql = "SELECT * FROM cart WHERE user_id = '".$user_id."'";
                 $rs = mysqli_query($con, $sql);
                 while($row = mysqli_fetch_assoc($rs)){
-                
+                    $sum += $row['totalp'];
                     echo "
                     <div class='item_header item_body'>           
                             <div class='name'><span></span> <td>".$row['itemfullname']."<br /></div>
+                            <div class='tablenum'><span></span> <td>".$row['seat_id']."<br /></div>
                             <div class='note'><span></span> <td>".$row['note']."<br /></div>
-                            <div class='count'>
-                                <button @click='handleSub(item)'>-</button>
-                                ".$row['amount']."
-                                <button @click='handlePlus(item)'>+</button>
-                            </div> 
+                            <div class='count'>".$row['amount']."</div> 
                             <div class='amount'><strong>TOTAL: $".$row['totalp']."</strong></div>
                             <div class='operate'>
-                                <button @click='handledelete(index)'>刪除</button>
+                                <form action='cartdel.php' method = 'post'>
+                                    <input type='hidden' name = 'user_id' value = '".$user_id."'>
+                                    <input type='hidden' name = 'full' value='".$row['itemfullname']."'>
+                                    <input type='submit' value = '刪除'>
+                                </form>
                             </div>
-                    </div>     
+                    </div>   
                     ";
                 }
 
@@ -160,10 +162,14 @@
     <br>
     <center>
     <div>
-    <button type="button" class="btn-orderagain"><p>繼續加點</p></button>
-    <button type="button" class="btn-finish"><p>完成訂單</p></button>
+        <strong>小計：$<?php echo $sum?></strong>
+    </div>
+    <br>
+    <div>
+        <a href="menu.php" ><button type="button" class="btn-orderagain"><p>繼續加點</p></button></a>
+        <a href="sendorder.php"><button type="button" class="btn-finish"><p>完成訂單</p></button></a>
     </div>
     </center>
 </body>
-<script src="main.js"></script>
+
 </html>
