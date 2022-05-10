@@ -1,6 +1,7 @@
 <?php
     include("db.php");
     $user_id = "test";
+    $tablenum=$_POST['tablenum'];
 
     #get sum
     $sql = "SELECT SUM(totalp) AS `sum` FROM cart WHERE `user_id` = '".$user_id."'";
@@ -14,11 +15,7 @@
     $now = date('Y/m/d H:i:s');
     $nowsec = strtotime($now);
 
-    #get seat_id
-    $sql = "SELECT seat_id FROM cart WHERE `user_id` = '".$user_id."'";
-    $rs = mysqli_query($con, $sql);
-    $row = mysqli_fetch_assoc($rs);
-    $tablenum = $row['seat_id'];
+
 
     #create rec_num
     $sql = "SELECT date, rec_num FROM `order` WHERE `user_id` = '".$user_id."' AND DATE(date) = DATE(now()) AND date = (SELECT MAX(date) from `order`);";
@@ -48,7 +45,7 @@
     $sql = "SELECT * FROM cart WHERE `user_id` = '".$user_id."'";
     $rs = mysqli_query($con, $sql);
     while($row = mysqli_fetch_assoc($rs)){
-        $sql = "INSERT INTO orderdetail (item_id, order_id, seat_id, itemfullname, note, amount) VALUES ('".$row['item_id']."', '".$order_id."', '".$tablenum."', '".$row['itemfullname']."', '".$row['note']."', '".$row['amount']."');";
+        $sql = "INSERT INTO orderdetail (item_id, order_id, itemfullname, note, amount) VALUES ('".$row['item_id']."', '".$order_id."', '".$row['itemfullname']."', '".$row['note']."', '".$row['amount']."');";
         if(mysqli_query($con, $sql)){
             #header("Location: menu.php?message=成功加入訂單及訂單細項");
         }
@@ -62,6 +59,6 @@
         header("Location: menu.php?message=成功加入訂單及訂單細項和清除購物車");
    
     }
-    
+
 
     mysqli_close($con);
