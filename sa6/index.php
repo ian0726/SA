@@ -48,7 +48,7 @@
     <!-- end header section -->
     <!-- slider section -->
     <br><br><br><br><br>
-    <a style="color:aliceblue;" href="queue.php">
+    <a style="color:aliceblue;" href="seatcheck.php">
       <div class="card border-0" style="max-width: 23rem;">
         <div class="card-body" style="background-color:#bdb76b;">
           <center>

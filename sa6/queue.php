@@ -1,24 +1,37 @@
 <?php
-session_start();
-$link=mysqli_connect("localhost","root","","sa");
-if(isset($_POST["name"]) && isset($_POST["phone"]) && isset($_POST["time"]) && isset($_POST["people"])){
-    $name=$_POST["name"];
-    $phone=$_POST["phone"];
-    $time=$_POST["time"];
-    $people=$_POST["people"];
-    #get date
-    date_default_timezone_set('Asia/Taipei');
-    $today=date('Y-m-d');
-    $now=date('Y-m-d H:i:s');
-    $nowsec=strtotime($now);
+    session_start();
+    if(isset($_SESSION['user_id'])){
+        $user_id = $_SESSION['user_id'];
+    }
+    else{
+        echo "<script>{window.alert('請先登入！'); location.href='seatcheck.php'}</script>";
+    }
+    include("db.php");
+    if(isset($_POST["name"]) && isset($_POST["people"])){
+        #check existing user
+        $sql = "SELECT * FROM `queue` WHERE user_id = '".$user_id."'";
+        $rs = mysqli_query($con, $sql);
+        if(mysqli_num_rows($rs) == 0){
+            $name = $_POST['name'];
+            $people=$_POST["people"];
+            #get date
+            date_default_timezone_set('Asia/Taipei');
+            $today=date('Y-m-d');
+            $now=date('Y-m-d H:i:s');
+            $nowsec=strtotime($now);
 
-    
-    $sql="insert into register(name, phone , date, people) values ('$name', '$phone' , '$now','$people')";
-    $result=mysqli_query($link,$sql);
-    if (isset($result)){
-        echo "<script>{window.alert('新增成功！'); location.href='方禾食呂首頁.php'}</script>";
-}
-}
+            $sql="insert into queue(user_id, time, people) values ('$name', '$now','$people')";
+            if ($result=mysqli_query($con,$sql)){
+                echo "<script>{window.alert('新增成功！'); location.href='seatcheck.php'}</script>";
+            }
+        }
+        else{
+            echo "<script>{window.alert('此帳號已候位，請查看候位狀態！'); location.href='seatcheck.php'}</script>";
+        }
+        
+    }
+
+    mysqli_close($con);
 ?>
 <!DOCTYPE html>
 <html>
@@ -63,23 +76,23 @@ if(isset($_POST["name"]) && isset($_POST["phone"]) && isset($_POST["time"]) && i
         <br><br>
         <center><h1 class="h3 mb-2 text-gray-800" style="font-family: Arial, Helvetica, sans-serif;font-weight:bold;color:white">登記候位</h1></center>
         <br>
-                <!-- DataTales Example -->
-                <div class="card shadow mb-4">
-                    <section class="ftco-section">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                 <div class="m-4 text-center mb-4 ml-4 mr-4">
-                                    <form action="queue.php" method="post"  class="d-none d-sm-inline-block form-inline mr-auto">
-                                        <br>
-                                        <input type="hidden" name="filled" value="filled">
-                                        姓名：<input type="text" name="name" value="" required><br><br>
-                                        電話：<input type="text" name="phone" value="" required><br><br>
-                                        人數：<select name="people" style="width:205px"><option value="" hidden selected disabled>請選擇人數</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select><br>
-                                        <br>
-                                        <input type="submit"  class="btn btn-light border-0" style="background-color:#ffd700;color:white;font-weight:bold"value="登記">
-                                    </form>
-                    </section>
-                </div>
+        <!-- DataTales Example -->
+        
+        <div class="card shadow mb-4">
+            <section class="ftco-section">
+                <div class="container">
+                    <div class="row justify-content-center">
+                            <div class="m-4 text-center mb-4 ml-4 mr-4">
+                            <form action="queue.php" method="post"  class="d-none d-sm-inline-block form-inline mr-auto">
+                                <br>
+                                <input type="hidden" name="filled" value="filled">
+                                帳號：<input type="text" name="name" value="<?php echo"".$user_id.""?>" readonly required><br><br>
+                                人數：<select name="people" style="width:205px" required><option value="" hidden selected disabled>請選擇人數</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select><br>
+                                <br>
+                                <input type="submit"  class="btn btn-light border-0" style="background-color:#ffd700;color:white;font-weight:bold"value="登記">
+                            </form>
+            </section>
+        </div>
     </div>
   </div>
 

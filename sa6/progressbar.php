@@ -1,7 +1,12 @@
 
 <?php
-  $user_id = "test";
-  $order_id = 37;
+  session_start();
+  if(isset($_SESSION['user_id'])){
+    $user_id = $_SESSION['user_id'];
+  }
+  else{
+    echo "<script>{window.alert('請登入！'); location.href='menu.php'}</script>";
+  }
   include("db.php");
 ?>
 <!DOCTYPE html>
@@ -203,176 +208,101 @@
       <img src="images/hero-bg.jpg" alt="">
     </div>
     <!-- header section strats -->
-    <header class="header_section">
-      <div class="container">
-        <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="index.php">
-            <span>
-            方禾食呂
-            </span>
-          </a>
-
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class=""> </span>
-          </button>
-
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav  mx-auto ">
-              <li class="nav-item">
-                <a class="nav-link" href="index.php">首頁 </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="menu.php">菜單  </a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="progressbar.php">訂單狀態 <span class="sr-only">(current)</span></a>
-              </li>
-              <!--ADD MORE ITEMS IN NAV BAR HERE-->
-              <!-- 
-              <li class="nav-item">
-                <a class="nav-link" href="about.html">About</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="book.html">Book Table</a>
-              </li>
-              -->
-            </ul>
-            <div class="user_option">
-              <a href="historicalorder.php" class="user_link">
-                <i class="fa fa-user" aria-hidden="true"></i>
-              </a>
-              <a class="cart_link" href="cart.php">
-                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029"
-                  style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                  <g>
-                    <g>
-                      <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                   c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
-                    </g>
-                  </g>
-                  <g>
-                    <g>
-                      <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                   C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                   c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                   C457.728,97.71,450.56,86.958,439.296,84.91z" />
-                    </g>
-                  </g>
-                  <g>
-                    <g>
-                      <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                   c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
-                    </g>
-                  </g>
-                </svg>
-              </a>
-              <!--
-              <form class="form-inline">
-                <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
-                  <i class="fa fa-search" aria-hidden="true"></i>
-                </button>
-              </form>
-              <a href="" class="order_online">
-                Order Online
-              </a>
-              -->
-            </div>
-          </div>
-        </nav>
-      </div>
-    </header>
+    <?php
+      include("header.php");
+    ?>
     <!-- end header section -->
   </div>
-  <section class="step-wizard">
-    <ul class='step-wizard-list'>
-      <?php
-        $sql = "SELECT * FROM `order` WHERE user_id = '".$user_id."' AND order_id =".$order_id."";
-        $rs = mysqli_query($con, $sql);
-        if($row = mysqli_fetch_assoc($rs)){
-          #echo $row['order_id'];
-          #echo $row['complete'];
-          if($row['complete']== 0){
-            echo "
-            
-              <li class='step-wizard-item current-item'>
-                  <span class='progress-count'>1</span>
-                  <span class='progress-label'>訂單待確認</span>
-              </li>
-              <li class='step-wizard-item'>
-                  <span class='progress-count'>2</span>
-                  <span class='progress-label'>餐點準備中</span>
-              </li>
-              <li class='step-wizard-item'>
-                  <span class='progress-count'>3</span>
-                  <span class='progress-label'>請取餐</span>
-              </li>
-          </ul>
-            ";
-          }
-          elseif($row['complete'] == 1){
-            echo "
-              <li class='step-wizard-item'>
-                  <span class='progress-count'>1</span>
-                  <span class='progress-label'>訂單已確認</span>
-              </li>
-              <li class='step-wizard-item current-item'>
-                  <span class='progress-count'>2</span>
-                  <span class='progress-label'>餐點準備中</span>
-              </li>
-              <li class='step-wizard-item'>
-                  <span class='progress-count'>3</span>
-                  <span class='progress-label'>請取餐</span>
-              </li>
-          </ul>
-            ";
-          }
-          elseif($row['complete'] == 2){
-            echo "
-              <li class='step-wizard-item'>
-                  <span class='progress-count'>1</span>
-                  <span class='progress-label'>訂單已確認</span>
-              </li>
-              <li class='step-wizard-item'>
-                  <span class='progress-count'>2</span>
-                  <span class='progress-label'>餐點已完成</span>
-              </li>
-              <li class='step-wizard-item current-item'>
-                  <span class='progress-count'>3</span>
-                  <span class='progress-label'>請取餐</span>
-              </li>
-          </ul>
-            ";
-          }
-          elseif($row['complete'] == 3){
-            echo "
-              <li class='step-wizard-item'>
-                  <span class='progress-count'>1</span>
-                  <span class='progress-label'>訂單已確認</span>
-              </li>
-              <li class='step-wizard-item'>
-                  <span class='progress-count'>2</span>
-                  <span class='progress-label'>餐點已完成</span>
-              </li>
-              <li class='step-wizard-item'>
-                  <span class='progress-count'>3</span>
-                  <span class='progress-label'>已取餐，請享用</span>
-              </li>
-          </ul>
-            ";
-          }
+  
+    <?php
+      $sql = "SELECT * FROM ordermain WHERE user_id = '".$user_id."' AND complete !=3 ";
+      $rs = mysqli_query($con, $sql);
+      $count = 0;
+      while($row = mysqli_fetch_assoc($rs)){
+        $count += 1;
+        echo "
+        <section class='step-wizard'>
+          <ul class='step-wizard-list'>
+        ";
+        #echo $row['order_id'];
+        #echo $row['complete'];
+        if($row['complete']== 0){
+          echo "
+          
+            <li class='step-wizard-item current-item'>
+                <span class='progress-count'>1</span>
+                <span class='progress-label'>訂單待確認</span>
+            </li>
+            <li class='step-wizard-item'>
+                <span class='progress-count'>2</span>
+                <span class='progress-label'>餐點準備中</span>
+            </li>
+            <li class='step-wizard-item'>
+                <span class='progress-count'>3</span>
+                <span class='progress-label'>請取餐</span>
+            </li>
+        </ul>
+          ";
         }
-        ?>
+        elseif($row['complete'] == 1){
+          echo "
+            <li class='step-wizard-item'>
+                <span class='progress-count'>1</span>
+                <span class='progress-label'>訂單已確認</span>
+            </li>
+            <li class='step-wizard-item current-item'>
+                <span class='progress-count'>2</span>
+                <span class='progress-label'>餐點準備中</span>
+            </li>
+            <li class='step-wizard-item'>
+                <span class='progress-count'>3</span>
+                <span class='progress-label'>請取餐</span>
+            </li>
+        </ul>
+          ";
+        }
+        elseif($row['complete'] == 2){
+          echo "
+            <li class='step-wizard-item'>
+                <span class='progress-count'>1</span>
+                <span class='progress-label'>訂單已確認</span>
+            </li>
+            <li class='step-wizard-item'>
+                <span class='progress-count'>2</span>
+                <span class='progress-label'>餐點已完成</span>
+            </li>
+            <li class='step-wizard-item current-item'>
+                <span class='progress-count'>3</span>
+                <span class='progress-label'>請取餐</span>
+            </li>
+        </ul>
+          ";
+        }
+        elseif($row['complete'] == 3){
+          echo "
+            <li class='step-wizard-item'>
+                <span class='progress-count'>1</span>
+                <span class='progress-label'>訂單已確認</span>
+            </li>
+            <li class='step-wizard-item'>
+                <span class='progress-count'>2</span>
+                <span class='progress-label'>餐點已完成</span>
+            </li>
+            <li class='step-wizard-item'>
+                <span class='progress-count'>3</span>
+                <span class='progress-label'>已取餐，請享用</span>
+            </li>
+        </ul>
+          ";
+        }
+      
+      ?>
       
       </ul>
     </section>
     <section class="step-wizard2">
       <ul class="item-list">
       <?php
-          $sql = "SELECT * FROM `order` WHERE user_id = '".$user_id."' AND order_id = '".$order_id."'";
-          $rs = mysqli_query($con, $sql);
-          $row = mysqli_fetch_assoc($rs);
           $sum = $row['total_price'];
           echo "
             <center><h2 style='font-family: None;'>訂單編號：".$row['order_id']."</h2></center>
@@ -380,20 +310,31 @@
             <h5 style='text-align:right;font-size:16px;'>".$row['date']."</h5>
             <hr>
           ";
-          $sql = "SELECT * FROM `orderdetail` WHERE order_id = '".$order_id."'";
-          $rs = mysqli_query($con, $sql);
-          while($row = mysqli_fetch_assoc($rs)){
+          $sqltemp = "SELECT * FROM `orderdetail` WHERE order_id = ".$row['order_id']."";
+          $rstemp = mysqli_query($con, $sqltemp);
+          while($rowtemp = mysqli_fetch_assoc($rstemp)){
             echo "
-              <li><span class='boxed'>".$row['amount']."</span> ".$row['itemfullname']."</li>
+              <li><span class='boxed'>".$rowtemp['amount']."</span> ".$rowtemp['itemfullname']."</li>
               <hr>
             ";
           }
           echo "<div class='list-bottom'>總計金額：$".$sum."</div>";
-        mysqli_close($con);
       ?>
       </ul>
     </section>
-  
+    <?php
+        }
+        if($count == 0){
+          echo"
+          <section class='step-wizard' style='height: 100vh;'>
+            <div style='font-size: 30px;text-align:center; padding-top: 15%;'>
+              尚未有未完成訂單，請下單！
+            </div>
+          </section>
+          ";
+        }
+        mysqli_close($con);
+    ?>
 
   <!-- footer section -->
   <footer class="footer_section">

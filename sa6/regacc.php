@@ -35,7 +35,7 @@
 
 <div class="hero_area">
     <div class="bg-box">
-      <img src="images/eat.jpg" alt="">
+      <img src="images/storybox.png" alt="">
     </div>
     <!-- header section strats -->
     <?php
@@ -50,7 +50,7 @@
       <div class="heading_container">
         <br></br>
         <h2>
-         歡迎光臨 方禾食呂
+         會員註冊
         </h2>
         <h5>
          輸入以下資訊開始您的絕佳用餐體驗吧!
@@ -64,7 +64,7 @@
                 <input name="user_id" type="text" class="form-control" placeholder="請輸入帳號" style="width: 100%"/>
               </div>
               <div>
-                <input name="password" type="text" class="form-control" placeholder="請輸入密碼" style="width: 100%"/>
+                <input name="password" type="password" class="form-control" placeholder="請輸入密碼" style="width: 100%"/>
               </div>
               <div>
                 <input name="name" type="text" class="form-control" placeholder="請輸入姓名" style="width: 100%"/>
@@ -86,12 +86,25 @@
                 $name = $_POST["name"];
                 $phone = $_POST["phone"];
 
-                $sql = "insert into account (user_id, password, name, phone, block) values ('$user_id', '$password', '$name', '$phone', 0)";
+                $exist = 0;
+                $sql = "SELECT * FROM account";
                 $result=mysqli_query($link,$sql);
-                if (isset($result)){
-                echo "<script>{window.alert('註冊成功！'); location.href='login.php'}</script>";
+                while($row = mysqli_fetch_assoc($result)){
+                  if($row['user_id']==$user_id){
+                    $exist = 1;
+                  }
                 }
-              }   
+                if($exist == 1){
+                  echo "<script>{window.alert('此帳號已被註冊！'); location.href='regacc.php'}</script>";
+                }
+                else{
+                  $sql = "insert into account (user_id, password, name, phone, block) values ('$user_id', '$password', '$name', '$phone', 0)";
+                  if ($result=mysqli_query($link,$sql)){
+                    echo "<script>{window.alert('註冊成功！'); location.href='login.php'}</script>";
+                  }
+                }
+              }
+              mysqli_close();
             ?>
           </div>
         </div>

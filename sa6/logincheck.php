@@ -18,7 +18,7 @@
                 $_SESSION["phone"]=$row["phone"];
                 $_SESSION["password"]=$row["password"];
                 #header("location.href='方禾食呂首頁.php'");
-                header("Location: userindex.php");
+                header("Location: index.php");
             }
 
             else{
@@ -29,4 +29,6 @@
             echo "<script>{window.alert('此帳號尚未註冊!請先註冊帳號');location.href='regacc.php'}</script>";
         }
     }
+
+    mysqli_close($con);
 ?>

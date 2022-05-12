@@ -38,7 +38,7 @@
 
   <div class="hero_area">
     <div class="bg-box">
-      <img src="images/eat.jpg" alt="">
+      <img src="images/storybox.png" alt="">
     </div>
     <!-- header section strats -->
     <?php
@@ -52,7 +52,7 @@
     <div class="heading_container">
       <br> &nbsp;</br>
       <h2>
-        歡迎光臨 方禾食呂
+        會員登入
       </h2>
       <h5>
         如還未有帳號，點擊畫面右上角註冊立即加入我們!
@@ -66,7 +66,7 @@
                 <input name="user_id" type="text" class="form-control" placeholder="請輸入帳號" style="width:100%;" require/>
               </div>
               <div>
-                <input name="password" type="text" class="form-control" placeholder="請輸入密碼" style="width:100%;" require/>
+                <input name="password" type="password" class="form-control" placeholder="請輸入密碼" style="width:100%;" require/>
               </div>
             
               <div class="btn_box">
