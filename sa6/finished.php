@@ -54,7 +54,7 @@
   <thead>
       <th>訂單編號</th>
       <th>取餐號碼</th>
-      <th>餐點及細項｜餐點數量</th>
+      <th>餐點及細項｜餐點數量｜備註</th>
       <th>訂單金額</th>
       <th>使用者名稱</th>
       <th>日期</th>
@@ -77,16 +77,15 @@
         $rstemp = mysqli_query($con, $sqltemp);
         if($rstemp){
           while($rowtemp = mysqli_fetch_assoc($rstemp)){
-            echo"。".$rowtemp['itemfullname']."  ".$rowtemp['amount']."份<br>
+            echo"。".$rowtemp['itemfullname']."  ".$rowtemp['amount']."份
             ";
+            if($rowtemp['note'] != ""){
+              echo " 備註：".$rowtemp['note'];
+            }
+            echo"<br>";
           }
         }
-        if($row['place'] == 'here'){
-          $place = "內用";
-        }
-        elseif($row['place'] == 'go'){
-          $place = "外帶";
-        }
+        $place = $row['place'];
         echo "
         </td>
         <td>$".$row['total_price']."</td>
@@ -104,44 +103,47 @@
         echo"
         <div class='modal fade' id='exampleModal".$row['order_id']."' tabindex='-1' aria-labelledby='exampleModalLabel'
         aria-hidden='true'>
-        <div class='modal-dialog modal-dialog-centered modal-dialog-scrollable'>
-          <div class='modal-content' style='overflow:auto;'>
-            <div class='modal-header'>
-              <h5 class='modal-title' id='exampleModalLabel'>編輯｜訂單編號：".$row['order_id']."</h5>
-              
-              <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
-            </div>
-            <div class='text-body'>
-              <br>
-              <form action='updateorder.php' method = 'post'>
-                <input type='hidden' name = 'order_id' value = '".$row['order_id']."'>
-          ";
-                $sqltemp = "SELECT * FROM `orderdetail` WHERE order_id ='".$row['order_id']."'";
-                if($rstemp = mysqli_query($con, $sqltemp)){
-                  while($rowtemp = mysqli_fetch_assoc($rstemp)){
-                    echo"
-                    <input type='hidden' name = 'id[".$rowtemp['det_id']."]' value = '".$rowtemp['det_id']."'>
-                    <h5>&nbsp&nbsp。".$rowtemp['itemfullname']."</h5>
-                    <div class='form-check'>修改數量&nbsp
-                      <input type='number' class='formnumber' id='exampleFormControlInput' name = 'amount[]' min='0' max='10' value = '".$rowtemp['amount']."' required style='width: 90px;'>
-                    </div><br>
-                    ";
-                  }
-                }
-                echo"
-                <br>
-                <div class='modal-footer'>
-                  <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>取消</button>
-                  <input type='submit' class='btn btn-primary' value='更新訂單'>
-                </div>
+          <div class='modal-dialog modal-dialog-centered modal-dialog-scrollable'>
+            <div class='modal-content' style='overflow:auto;'>
+              <div class='modal-header'>
+                <h5 class='modal-title' id='exampleModalLabel'>編輯｜訂單編號：".$row['order_id']."</h5>
                 
-              </form>
+                <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+              </div>
+              <div class='text-body'>
+                <br>
+                <form action='updateorder.php' method = 'post'>
+                  <input type='hidden' name = 'page' value = 'finished'>
+                  <input type='hidden' name = 'order_id' value = '".$row['order_id']."'>
+            ";
+                  $sqltemp = "SELECT * FROM `orderdetail` WHERE order_id ='".$row['order_id']."'";
+                  if($rstemp = mysqli_query($con, $sqltemp)){
+                    while($rowtemp = mysqli_fetch_assoc($rstemp)){
+                      echo"
+                      <input type='hidden' name = 'id[]' value = '".$rowtemp['det_id']."'>
+                      <h5>&nbsp&nbsp。".$rowtemp['itemfullname']."</h5>
+                      <div class='form-check'>修改數量&nbsp
+                        <input type='number' class='formnumber' id='exampleFormControlInput' name = 'amount[]' min='0' max='10' value = '".$rowtemp['amount']."' required style='width: 90px;'>
+                      </div><br>
+                      <div class='form-check'>修改備註&nbsp
+                        <input type='text' id='exampleFormControlInput' name = 'note[]' value = '".$rowtemp['note']."'>
+                      </div><br>
+                      ";
+                    }
+                  }
+                  echo"
+                  <br>
+                  <div class='modal-footer'>
+                    <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>取消</button>
+                    <input type='submit' class='btn btn-primary' value='更新訂單'>
+                  </div>
+                  
+                </form>
+              </div>
             </div>
-            
           </div>
         </div>
-      </div>
-      ";
+          ";
         
       }
       if($item_count == 0){

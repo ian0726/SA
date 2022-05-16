@@ -1,24 +1,29 @@
 <?php
     include("db.php");
+    $page = $_POST['page'];
     $order_id = $_POST['order_id'];
 
     #get update list
     $id = $_POST['id'];
     $amount = $_POST['amount'];
-    $lst = array_combine($id, $amount);
+    #$lst = array_combine($id, $amount);
+    $note = $_POST['note'];
 
     #update orderdetail
-    foreach($lst as $id => $amount){
+    foreach($amount as $idx => $amount){
         if($amount == 0){
-            $sql = "DELETE FROM orderdetail WHERE det_id = ".$id."";
+            $sql = "DELETE FROM orderdetail WHERE det_id = ".$id[$idx]."";
             if($rs=mysqli_query($con, $sql)){
                 #echo "succesfully updated";
             }
         }
         else{
-            $sql = "UPDATE orderdetail SET amount=".$amount." WHERE det_id=".$id."";
+            $sql = "UPDATE orderdetail SET amount=".$amount.", note='".$note[$idx]."' WHERE det_id=".$id[$idx]."";
             if($rs = mysqli_query($con, $sql)){
                 #echo "Updated successfully";
+            }
+            else{
+                #echo "failed";
             }
         }
     }
@@ -45,9 +50,16 @@
         $sql = "UPDATE ordermain SET total_price=".$sum." WHERE order_id=".$order_id."";
         if($rs = mysqli_query($con, $sql)){
             #echo "Updated successfully";
-            header("Location: unfinished.php?message=成功更新訂單");
         }
     }
+
+    if($page == "unfinished"){
+        header("Location: unfinished.php?message=成功更新訂單");
+    }
+    elseif($page == "finished"){
+        header("Location: finished.php?message=成功更新訂單");
+    }
+    
     
     mysqli_close($con);
 ?>
