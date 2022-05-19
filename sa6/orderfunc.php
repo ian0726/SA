@@ -1,4 +1,5 @@
 <?php
+    session_start();
     include("db.php");
     $id = $_POST['id'];
     $func = $_POST['func'];

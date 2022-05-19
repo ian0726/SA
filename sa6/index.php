@@ -43,7 +43,8 @@
     </div>
     <!-- header section strats -->
     <?php
-      include("header.php");
+        session_start();
+        include("header.php");
     ?>
     <!-- end header section -->
     <!-- slider section -->

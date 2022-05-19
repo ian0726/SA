@@ -1,4 +1,5 @@
 <?php
+    session_start();
     include("db.php");
     $page = $_POST['page'];
     $order_id = $_POST['order_id'];
