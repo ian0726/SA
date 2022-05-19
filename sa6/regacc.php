@@ -104,7 +104,7 @@
                   }
                 }
               }
-              mysqli_close();
+              mysqli_close($con);
             ?>
           </div>
         </div>
