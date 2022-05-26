@@ -47,6 +47,40 @@ include("db.php");
     .bi-star-half {
       color: yellow;
     }
+    .table-outbox {
+      margin: 50px; /* 添加外距 */
+      box-shadow:1px 2px 2px 1px;
+      /* box-shadow: 0px 35px 50px rgba(27, 31, 49, 0.1); 添加表格陰影 */
+      background-color: white;
+    }
+
+    table {
+      border-collapse: collapse; /* 表格邊框合併 */
+      width: 100%; /* 寬度 100% */
+      /* background-color: white; 背景白色 */
+    }
+
+    table thead th {
+      color: #ffffff; /* 表頭文字白色 */
+      background: #847ad1; /* 表頭背景白色 */
+    }
+
+    table td,
+    table th {
+      text-align: center; /* 文字置中顯示 */
+      padding: 10px; /* 添加內距 */
+    }
+
+    table td {
+      border-right: 1px solid #f1f1f1; /* 表格 td 右邊框顏色 */
+    }
+
+    table tr:nth-child(even) {
+      background: #f8f8f8; /* 表格偶數 tr 灰色背景 */
+    }
+    .btn-warning{
+      margin-top:3px;
+    }
   </style>
 </head>
 
@@ -75,15 +109,14 @@ include("db.php");
 
       <ul class="filters_menu">
         <li data-filter="*" class="active">全部餐點</li>
-        <li data-filter=".推薦餐點">推薦餐點</li>
         <li data-filter=".經典餐盒">經典餐盒</li>
         <li data-filter=".輕食捲捲">輕食捲捲</li>
         <li data-filter=".沙拉水果盒">沙拉水果盒</li>
         <li data-filter=".主食單品">主食單品</li>
         <li data-filter=".其他單品">其他單品</li>
         <li data-filter=".飲料">飲料</li>
+        <li data-filter=".推薦餐點">推薦餐點</li>
       </ul>
-
       <div class="filters-content">
         <div class="row grid">
           <?php
@@ -145,15 +178,14 @@ include("db.php");
                       }
 
                       $half = fmod($average, 1);
-                      if ($half) {
+                      if ($half > 0) {
                         echo "<i class='bi bi-star-half'></i>";
                       }
-
-                      for ($j = 0; $j < 5 - $fill; $j++) {
+                      
+                      for ($j = 0; $j < 5 - ceil($average); $j++) {
                         echo "<i class='bi bi-star'></i>";
                       }
-                    };
-
+                    }
                     ?>
                   </div>
                 </div>
@@ -297,8 +329,54 @@ include("db.php");
                 ";
             }
           }
-          mysqli_close($con);
           ?>
+        </div>
+        <br><br>
+        <center style='padding-top: 20px;'><h3>好評餐點榜</h3></center>
+        <div class='table-outbox'>
+        <table>
+            <thead>
+              <tr>
+              <th>餐點樣圖</th>
+              <th>熱銷餐點</th>
+              <th>評分</th>
+              <th>我也想吃</th>
+              </tr>
+            </thead>
+            <tbody>
+            <?php
+            $sqlrec = "SELECT item.img, orderdetail.item_id, orderdetail.itemfullname, round(AVG(orderdetail.rating),2) AS avgmeal FROM `item`, `orderdetail` WHERE item.item_id = orderdetail.item_id GROUP BY orderdetail.item_id ORDER BY avgmeal DESC LIMIT 5";
+            $rsrec = mysqli_query($con, $sqlrec);
+            while($rowrec = mysqli_fetch_assoc($rsrec)){
+              $avgmeal = $rowrec['avgmeal'] == 0 ? '暫無評分' : $rowrec['avgmeal'];
+            ?>
+            <tr>
+              <td>
+              <img src='<?php echo $rowrec['img'] ?> ' alt=''width="175px"/>
+              </td>
+              <td>
+              <?php
+              echo $rowrec['itemfullname'];
+              ?>
+              </td>
+              <td>
+              <?php
+              echo $avgmeal;
+              ?>
+              </td>
+              <td>
+              <form action='reorderrec.php' method='post'>
+              <input type='hidden' name='item_id' value='<?php echo $rowrec['item_id'] ?>' />
+                <input type='submit'  class='btn btn-info btn-xs btn-edit' value = '重新訂購'>
+              </form>
+              </td>
+            </tr>
+            <?php
+            }
+            mysqli_close($con);
+            ?>
+            </tbody>
+          </table>
         </div>
       <div class="btn-box">
         <a href="">
