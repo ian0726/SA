@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+
     <style>
 #notification-area {
   position:fixed;
-  top:0px;
+  bottom:0px;
   left:10px;
   width:300px;
-  margin-top: 30vh;
-  height:70vh;
   display:flex;
+  z-index: 1000;
   flex-direction:column;
   justify-content:flex-end;
 }
@@ -30,7 +23,6 @@
   margin:5px 0px;
   opacity:0;
   left:20px;
-  z-index: 100;
   animation:showNotification 500ms ease-in-out forwards;
 }
 @keyframes showNotification {
@@ -51,8 +43,7 @@
   background:#00acee;
 }
     </style>
-</head>
-<body>
+
     <div id="notification-area">
     </div>
 
@@ -87,5 +78,3 @@
         notify("info","This is demo info notification message");
         }
     </script>
-</body>
-</html>

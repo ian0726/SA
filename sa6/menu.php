@@ -59,7 +59,7 @@ include("db.php");
     <!-- header section strats -->
     <?php
     include("header.php");
-    include("notification.php");
+    //include("notification.php");
     ?>
     <!-- end header section -->
   </div>
@@ -419,7 +419,9 @@ include("db.php");
     </div>
   </footer>
   <!-- footer section -->
-
+  <?php
+  include("notification.php");
+  ?>
   <!-- jQery -->
   <script src="js/jquery-3.4.1.min.js"></script>
   <!-- popper js -->

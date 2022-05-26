@@ -32,20 +32,23 @@
   <link href="css/style.css" rel="stylesheet" />
   <!-- responsive style -->
   <link href="css/responsive.css" rel="stylesheet" />
-
+  <style>
+    body, html{
+      height: 100%;
+    }
+  </style>
 </head>
 
 <body>
-
-  <div class="hero_area">
-    <div class="bg-box">
-      <img src="images/eat.jpg" alt="">
-    </div>
+  <div class="bg-box">
+    <img src="images/eat.jpg" alt="">
+  </div>
+    
     <!-- header section strats -->
     <?php
         session_start();
         include("header.php");
-        include("notification.php");
+        //include("notification.php");
     ?>
     <!-- end header section -->
     <!-- slider section -->
@@ -81,6 +84,10 @@
         </div>
       </div>
     </a>
+
+    <?php 
+    include('notification.php');
+    ?>
 
     <!-- jQery -->
     <script src="js/jquery-3.4.1.min.js"></script>
