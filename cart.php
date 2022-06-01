@@ -1,6 +1,12 @@
 <?php
+    session_start();
     include("db.php");
-    $user_id = "test";
+    if(isset($_SESSION['user_id'])){
+        $user_id = $_SESSION['user_id'];
+    }
+    else{
+        echo "<script>{window.alert('請登入！'); location.href='menu.php'}</script>";
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,8 +33,8 @@
             line-height: 30px;
         }
         .item_header .item_detail{
-  
-        }
+ 
+}
         .item_body{
             margin-top: 20px;
             height: 100px;
@@ -109,7 +115,7 @@
             transition: all .3s ease;
         }
         .btn-finish:hover{
-            color: #fff;
+            color: #ffbe33;
         }
         .btn-finish:hover::before{
             width: 100%;
@@ -128,6 +134,7 @@
 <div class="cart">
     <div class = "title" style="margin-bottom: 20px">購物車</div>
     <div id="app">
+        
         <div class="container">
             <div class="item_header">
                 <div class="name" style="color:white">商品及細項</div>
@@ -145,7 +152,6 @@
                     echo "
                     <div class='item_header item_body'>           
                             <div class='name'><span></span> <td>".$row['itemfullname']."<br /></div>
-
                             <div class='note'><span></span> <td>".$row['note']."<br /></div>
                             <div class='count'>".$row['amount']."</div> 
                             <div class='amount'><strong>TOTAL: $".$row['totalp']."</strong></div>
@@ -156,7 +162,7 @@
                                     <input type='submit' value = '刪除'>
                                 </form>
                             </div>
-                    </div>   
+                    </div>     
                     ";
                 }
 
@@ -175,15 +181,15 @@
             <select class="choosebtn" name='tablenum' required>
             <option value='' hidden selected disabled>請選擇桌號</option>
             <option value='外帶'>外帶</option>
-            <option value='單人1桌'>單人1桌</option>
-            <option value='單人2桌'>單人2桌</option>
-            <option value='單人3桌'>單人3桌</option>
-            <option value='單人4桌'>單人4桌</option>
-            <option value='單人5桌'>單人5桌</option>
-            <option value='單人6桌'>單人6桌</option>
-            <option value='單人7桌'>單人7桌</option>
-            <option value='單人8桌'>單人8桌</option>
-            <option value='單人9桌'>單人9桌</option>
+            <option value='單人01桌'>單人01桌</option>
+            <option value='單人02桌'>單人02桌</option>
+            <option value='單人03桌'>單人03桌</option>
+            <option value='單人04桌'>單人04桌</option>
+            <option value='單人05桌'>單人05桌</option>
+            <option value='單人06桌'>單人06桌</option>
+            <option value='單人07桌'>單人07桌</option>
+            <option value='單人08桌'>單人08桌</option>
+            <option value='單人09桌'>單人09桌</option>
             <option value='單人10桌'>單人10桌</option>
             <option value='單人11桌'>單人11桌</option>
             <option value='單人12桌'>單人12桌</option>
@@ -214,7 +220,6 @@
     </div>
     </center>
     </form>
-
 </body>
 
 </html>

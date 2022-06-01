@@ -129,6 +129,7 @@ function render_seat($con, $seat_id) {
     <!-- header section strats -->
     <?php
     include("header.php");
+    include("notification.php");
     ?>
     <!-- end header section -->
   </div>
@@ -139,61 +140,73 @@ function render_seat($con, $seat_id) {
   </div>
   <table>
     <tr>
-      <?php render_seat($con, '單人1桌') ?>
+      <?php render_seat($con, '單人01桌') ?>
     </tr>
     <tr>
-      <?php render_seat($con, '單人2桌') ?>
+      <?php render_seat($con, '單人02桌') ?>
       <?php render_seat($con, '雙人13桌') ?>
       <?php render_seat($con, '雙人14桌') ?>
       <?php render_seat($con, '雙人15桌') ?>
       <?php render_seat($con, '雙人16桌') ?>
     </tr>
     <tr>
-      <?php render_seat($con, '單人3桌') ?>
+      <?php render_seat($con, '單人03桌') ?>
       <td></td>
       <td></td>
       <td></td>
       <td></td>
-      <?php render_seat($con, '沙發25桌') ?>
     </tr>
     <tr>
-      <?php render_seat($con, '單人4桌') ?>
+      <?php render_seat($con, '單人04桌') ?>
       <?php render_seat($con, '雙人17桌') ?>
       <?php render_seat($con, '雙人18桌') ?>
       <?php render_seat($con, '雙人19桌') ?>
       <?php render_seat($con, '雙人20桌') ?>
     </tr>
     <tr>
-      <?php render_seat($con, '單人5桌') ?>
+      <?php render_seat($con, '單人05桌') ?>
       <td></td>
       <td></td>
       <td></td>
       <td></td>
-      <?php render_seat($con, '沙發25桌') ?>
     </tr>
     <tr>
-      <?php render_seat($con, '單人6桌') ?>
+      <?php render_seat($con, '單人06桌') ?>
       <?php render_seat($con, '雙人21桌') ?>
       <?php render_seat($con, '雙人22桌') ?>
       <?php render_seat($con, '雙人23桌') ?>
       <?php render_seat($con, '雙人24桌') ?>
     </tr>
     <tr>
-      <?php render_seat($con, '單人7桌') ?>
+      <?php render_seat($con, '單人07桌') ?>
     </tr>
     <tr>
-      <?php render_seat($con, '單人8桌') ?>
-      <?php render_seat($con, '單人9桌') ?>
+      <?php render_seat($con, '單人08桌') ?>
+      <?php render_seat($con, '單人09桌') ?>
       <?php render_seat($con, '單人10桌') ?>
       <?php render_seat($con, '單人11桌') ?>
       <?php render_seat($con, '單人12桌') ?>
     </tr>
   </table>
 
-
+  
+  <?php
+  if(isset($_SESSION['user_id'])){
+  ?>
   <a href="queue.php"><button type="button" class="btn btn-chooseat">
       開始候位
     </button></a>
+  <?php
+  }
+  else{
+  ?>
+  <button type="button" class="btn btn-chooseat" onclick="notifyError()">
+      開始候位
+    </button>
+  <?php
+  }
+  ?>
+
   <!-- Button trigger modal -->
   <button type="button" class="btn btn-showaiting" data-bs-toggle="modal" data-bs-target="#exampleModal">
     查看候位狀態
@@ -211,27 +224,192 @@ function render_seat($con, $seat_id) {
 
           <?php
           if (!isset($user_id)) {
-            echo "請先登入";
-          } else {
-            $sql = "SELECT queue_id FROM queue WHERE user_id = '" . $user_id . "'";
+            $sql = "SELECT COUNT('queue_id') AS C FROM queue";
             $rs = mysqli_query($con, $sql);
             $row = mysqli_fetch_assoc($rs);
+            $count = $row['C'];
+            echo "目前有" . $count . "組正在候位";
+            echo "<br>";
+          } 
+          else{
+            $sql = "SELECT people, queue_id FROM queue WHERE user_id = '" . $user_id . "'";
+            $rs = mysqli_query($con, $sql);
+            $row = mysqli_fetch_assoc($rs);
+            if(mysqli_num_rows($rs) == 0){
+              $sql = "SELECT COUNT('queue_id') AS C FROM queue";
+              $rs = mysqli_query($con, $sql);
+              $row = mysqli_fetch_assoc($rs);
+              $count = $row['C'];
+              echo "目前有" . $count . "組正在候位";
+              echo "<br>";
+            }
+            else{
             $queue_id = $row['queue_id'];
             echo "您的候位號碼為: " . $queue_id;
             echo "<br>";
             $sql = "SELECT COUNT('queue_id') AS C FROM queue WHERE queue_id < " . $queue_id . "";
             $rs = mysqli_query($con, $sql);
             $row = mysqli_fetch_assoc($rs);
-            $count = $row['C'];
-            echo "前方有" . $count . "組正在候位";
+            $countseat = $row['C'];
+            echo "前方有" . $countseat . "組正在候位";
             echo "<br>";
-            if ($count == 0) {
-              echo "<font size=\"5\" color=\"red\">請準備入座</font>";
-            } else {
-              echo " ";
+                 
+            $sql = "SELECT queue_id, queue.people, seating.seatnum FROM queue, seating WHERE occupied = 0 AND user_id = '" . $user_id . "'";
+            $rs = mysqli_query($con, $sql);
+            $cur = ''; #現在id
+            $count = 0; #最高連續空桌數
+            $streak = 0; #現在連續空桌數
+            $var = 0;
+            if($countseat == 0){
+            while($row = mysqli_fetch_assoc($rs)){
+            if($row['people'] == 1){
+              if( $row['seatnum'] == 101 ||  $row['seatnum'] == 102 ||  $row['seatnum'] == 103 ||  $row['seatnum'] == 104 ||  $row['seatnum'] == 105 ||  $row['seatnum'] == 106 ||  $row['seatnum'] == 107 ||  $row['seatnum'] == 108 
+              ||  $row['seatnum'] == 109 ||  $row['seatnum'] == 110 ||  $row['seatnum'] == 111 ||  $row['seatnum'] == 112 ||  $row['seatnum'] == 213 ||  $row['seatnum'] == 214 ||  $row['seatnum'] == 215 ||  $row['seatnum'] == 216 
+              ||  $row['seatnum'] == 317 ||  $row['seatnum'] == 318 ||  $row['seatnum'] == 319 ||  $row['seatnum'] == 320 ||  $row['seatnum'] == 421 ||  $row['seatnum'] == 422 ||  $row['seatnum'] == 423 ||  $row['seatnum'] == 424){
+              echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+              break;
+              }
             }
-          }
+            
+            if($row['people'] == 2 && $row['seatnum'] < 200){
 
+              if($cur == ''){
+                $cur = $row['seatnum'];
+              }
+              else{
+                $check = $row['seatnum'] - $cur;
+                if($check == 1){
+                  $streak += 1;
+                  if($streak > $count){
+                    $var = 1;
+                    $count = $streak;
+                    if ($count == 1){
+                      echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                      
+                    }
+                  }
+                }
+                else{
+                  $streak = 0;
+                }
+                $cur = $row['seatnum'];
+              }
+            }
+            
+            elseif($row['people'] == 2 && $row['seatnum'] > 200){
+              if($row['seatnum'] == 213 || $row['seatnum'] == 214 || $row['seatnum'] == 215 ||$row['seatnum'] == 216 || $row['seatnum'] == 317 || $row['seatnum'] == 318 
+              || $row['seatnum'] == 319 || $row['seatnum'] == 320 ||$row['seatnum'] == 421 || $row['seatnum'] == 422 || $row['seatnum'] == 423 || $row['seatnum'] == 424){
+              echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+              break;
+              }
+            }
+
+            if($row['people'] == 3 && $row['seatnum'] < 200){
+              if($cur == ''){
+                $cur = $row['seatnum'];
+              }
+              else{
+                $check = $row['seatnum'] - $cur;
+                if($check == 1){
+                  $streak += 1;
+                  if($streak > $count){
+                    $var = 1;
+                    $count = $streak;
+                    if ($count == 2){
+                    echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                    
+                  }
+                  }
+                }
+                else{
+                  $streak = 0;
+                }
+                $cur = $row['seatnum'];
+              }
+            }
+
+            elseif($row['people'] == 3 && $row['seatnum'] > 200){
+            if($var == 1){
+              $var = 0;
+              $cur = ''; #現在id
+              $count = 0; #最高連續空桌數
+              $streak = 0; #現在連續空桌數
+            }
+              if($cur == 0){
+                $cur = $row['seatnum'];
+              }
+              else{
+                $check = $row['seatnum'] - $cur;
+                if($check == 1){
+                  $streak += 1;
+                  if($streak > $count){
+                    $count = $streak;
+                    if ($count == 1){
+                      echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                    }
+                  }
+                }
+                else{
+                  $streak = 0;
+                }
+                $cur = $row['seatnum'];
+              }  
+            }
+
+            if($row['people'] == 4 && $row['seatnum'] < 200){
+              if($cur == ''){
+                $cur = $row['seatnum'];
+              }
+              else{
+                $check = $row['seatnum'] - $cur;
+                if($check == 1){
+                  $streak += 1;
+                  if($streak > $count){
+                    $var = 1;
+                    $count = $streak;
+                    if ($count == 3){
+                      echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                    }
+                  }
+                }
+                else{
+                  $streak = 0;
+                }
+                $cur = $row['seatnum'];
+              }  
+            }
+
+            elseif($row['people'] == 4 && $row['seatnum'] > 200){
+            if($var == 1){
+              $var = 0;
+              $cur = ''; #現在id
+              $count = 0; #最高連續空桌數
+              $streak = 0; #現在連續空桌數
+            }
+              if($cur == ''){
+                $cur = $row['seatnum'];
+              }
+              else{
+                $check = $row['seatnum'] - $cur;
+                if($check == 1){
+                  $streak += 1;
+                  if($streak > $count){
+                    $count = $streak;
+                    if ($count == 1){
+                      echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                    }
+                  }
+                }
+                else{
+                  $streak = 0;
+                }
+                $cur = $row['seatnum'];
+              }  
+            }
+            }        
+          }
+        }
+      }          
           mysqli_close($con);
           ?>
 
