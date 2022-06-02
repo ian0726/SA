@@ -6,7 +6,9 @@
         $item_id=$_POST["id"];
         $sql="Update `item` set `av`=".$av." , `des`='".$des."' WHERE `item_id`= ".$item_id."";
         if ($result=mysqli_query($con,$sql)){
-            echo "<script>{window.alert('修改成功！'); location.href='menucheck.php'}</script>";
+          $_SESSION['type'] = "success";
+          header("Location: menucheck.php?message=修改成功！");
+          #echo "<script>{window.alert('修改成功！'); location.href='menucheck.php'}</script>";
         }
     }
 ?>

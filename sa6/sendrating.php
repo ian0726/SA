@@ -8,10 +8,12 @@
     $sql = "UPDATE `orderdetail` SET `rating` = $score, `feedback` = '$feedback' WHERE `det_id` = '$detail_id'";
 
     if($rs = mysqli_query($con, $sql)){
-        header("Location: historicalorder.php?message=成功送出");
+        $_SESSION['type'] = "success";
+        header("Location: historicalorder.php?message=成功送出評分");
     }
     else{
-        header("Location: index.php?message=失敗");
+        $_SESSION['type'] = "error";
+        header("Location: index.php?message=評分失敗");
     }
     mysqli_close($con);
 ?>

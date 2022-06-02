@@ -6,18 +6,21 @@
     if($func == "confirm"){
         $sql = "UPDATE ordermain SET complete = 1 WHERE order_id = ".$id."";
         if($rs = mysqli_query($con, $sql)){
+            $_SESSION['type'] = "success";
             header("Location: unfinished.php?message=成功更新狀態");
         }
     }
     elseif($func == "notify"){
         $sql = "UPDATE ordermain SET complete = 2 WHERE order_id = ".$id."";
         if($rs = mysqli_query($con, $sql)){
+            $_SESSION['type'] = "success";
             header("Location: unfinished.php?message=成功更新狀態");
         }
     }
     elseif($func == "done"){
         $sql = "UPDATE ordermain SET complete = 3 WHERE order_id = ".$id."";
         if($rs = mysqli_query($con, $sql)){
+            $_SESSION['type'] = "success";
             header("Location: unfinished.php?message=成功更新狀態");
         }
     }
@@ -30,6 +33,7 @@
         }
         $sql = "UPDATE account SET block = block + 1 WHERE user_id = '".$user_id."'";
         if($rs = mysqli_query($con, $sql)){
+            $_SESSION['type'] = "success";
             header("Location: unfinished.php?message=成功更新狀態");
         }
     }

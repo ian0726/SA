@@ -62,16 +62,16 @@
           <div class="form_container">
             <form action="regacc.php" method ="post">
               <div>
-                <input name="user_id" type="text" class="form-control" placeholder="請輸入帳號" style="width: 100%"/>
+                <input name="user_id" type="text" class="form-control" placeholder="請輸入帳號" style="width: 100%" required/>
               </div>
               <div>
-                <input name="password" type="password" class="form-control" placeholder="請輸入密碼" style="width: 100%"/>
+                <input name="password" type="password" class="form-control" placeholder="請輸入密碼" style="width: 100%" required/>
               </div>
               <div>
-                <input name="name" type="text" class="form-control" placeholder="請輸入姓名" style="width: 100%"/>
+                <input name="name" type="text" class="form-control" placeholder="請輸入姓名" style="width: 100%" required/>
               </div>
               <div>
-                <input name="phone" type="text" class="form-control" placeholder="請輸入電話號碼"  style="width: 100%"/>
+                <input name="phone" type="text" class="form-control" placeholder="請輸入電話號碼"  style="width: 100%" required/>
               </div>
             
               <div class="btn_box">
@@ -96,12 +96,16 @@
                   }
                 }
                 if($exist == 1){
-                  echo "<script>{window.alert('此帳號已被註冊！'); location.href='regacc.php'}</script>";
+                  $_SESSION['type'] = "error";
+                  header("Location: regacc.php?message=此帳號已被註冊！");
+                  #echo "<script>{window.alert('此帳號已被註冊！'); location.href='regacc.php'}</script>";
                 }
                 else{
                   $sql = "insert into account (user_id, password, name, phone, block) values ('$user_id', '$password', '$name', '$phone', 0)";
                   if ($result=mysqli_query($link,$sql)){
-                    echo "<script>{window.alert('註冊成功！'); location.href='login.php'}</script>";
+                    $_SESSION['type'] = "success";
+                    header("Location: login.php?message=註冊成功！");
+                    #echo "<script>{window.alert('註冊成功！'); location.href='login.php'}</script>";
                   }
                 }
               }

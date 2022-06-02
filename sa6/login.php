@@ -105,7 +105,14 @@
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
   </script>
   <!-- End Google Map -->
-
+  <?php 
+    include('notification.php');
+    if(isset($_GET['message'])){
+      if(isset($_SESSION['type'])){
+        echo "<script>notify('".$_SESSION['type']."', '".$_GET['message']."')</script>";
+      }
+    }
+    ?>
 </body>
 
 </html>

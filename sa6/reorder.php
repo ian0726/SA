@@ -8,7 +8,10 @@
         if($rs = mysqli_query($con, $sql)){
             while($row = mysqli_fetch_assoc($rs)){
                 $item_id = $row['item_id'];
-                $full = $row['itemfullname'];
+                $name = $row['item_name'];
+                $sauce = $row['sauce'];
+                $side = $row['side'];
+                $variant = $row['variant'];
                 $note = $row['note'];
                 $amount = $row['amount'];
                 $sqltemp = "SELECT * FROM item WHERE item_id = ".$item_id."";
@@ -22,7 +25,16 @@
                     $rscheck = mysqli_query($con, $sqlcheck);
                     #if not exist
                     if(mysqli_num_rows($rscheck) == 0){
-                        $sqlinsert = "INSERT INTO cart (`user_id`, item_id, itemfullname, amount, note, totalp) VALUES ('$user_id', '$item_id', '$full', '$amount', '$note', '$total');";
+                        if(isset($sauce)){
+                            $sqlinsert = "INSERT INTO cart (`user_id`, item_id, item_name, sauce, side, amount, note, totalp) VALUES ('$user_id', '$item_id', '$name', '$sauce', '$side', '$amount', '$note', '$total');";
+                        }
+                        elseif(isset($variant)){
+                            $sqlinsert = "INSERT INTO cart (`user_id`, item_id, item_name, variant, amount, note, totalp) VALUES ('$user_id', '$item_id', '$name', '$variant', '$amount', '$note', '$total');";
+                        }
+                        else{
+                            $sqlinsert = "INSERT INTO cart (`user_id`, item_id, item_name, amount, note, totalp) VALUES ('$user_id', '$item_id', '$name', '$amount', '$note', '$total');";
+                        }
+                        #$sqlinsert = "INSERT INTO cart (`user_id`, item_id, itemfullname, amount, note, totalp) VALUES ('$user_id', '$item_id', '$full', '$amount', '$note', '$total');";
                         if(mysqli_query($con, $sqlinsert)){
                             echo "user not in cart";
                         }
@@ -32,22 +44,39 @@
                         $same = 0;
                         while($rowcheck = mysqli_fetch_assoc($rscheck)){
                             #check if same full
-                            if($rowcheck['itemfullname'] == $full && $rowcheck['amount'] != $amount){
+                            if($rowcheck['item_name'] == $name && $rowcheck['sauce'] == $sauce &&$rowcheck['amount'] != $amount){
                                 $same = 1;
                                 $sqlupdate = "UPDATE cart SET amount = $amount, totalp = $total
-                                WHERE `user_id` = '".$user_id."' AND itemfullname = '".$full."';";
+                                WHERE `user_id` = '".$user_id."' AND item_name = '".$name."' AND sauce= '".$sauce."';";
                                 if(mysqli_query($con, $sqlupdate)){
                                    
                                 }
                                 
                             }
-                            elseif($rowcheck['itemfullname'] == $full && $rowcheck['amount'] == $amount){
+                            elseif($rowcheck['item_name'] == $name && $rowcheck['variant'] == $variant &&$rowcheck['amount'] != $amount){
+                                $same = 1;
+                                $sqlupdate = "UPDATE cart SET amount = $amount, totalp = $total
+                                WHERE `user_id` = '".$user_id."' AND item_name = '".$name."' AND variant= '".$variant."';";
+                                if(mysqli_query($con, $sqlupdate)){
+                                   
+                                }
+                                
+                            }
+                            elseif($rowcheck['item_name'] == $name && $rowcheck['amount'] == $amount){
                                 $same = 1;
                                 
                             }
                         }
                         if($same == 0){
-                            $sqlinsert = "INSERT INTO cart (`user_id`, item_id, itemfullname, amount, note, totalp) VALUES ('$user_id', '$item_id', '$full', '$amount', '$note', '$total');";
+                            if(isset($sauce)){
+                                $sqlinsert = "INSERT INTO cart (`user_id`, item_id, item_name, sauce, side, amount, note, totalp) VALUES ('$user_id', '$item_id', '$name', '$sauce', '$side', '$amount', '$note', '$total');";
+                            }
+                            elseif(isset($variant)){
+                                $sqlinsert = "INSERT INTO cart (`user_id`, item_id, item_name, variant, amount, note, totalp) VALUES ('$user_id', '$item_id', '$name', '$variant', '$amount', '$note', '$total');";
+                            }
+                            else{
+                                $sqlinsert = "INSERT INTO cart (`user_id`, item_id, item_name, amount, note, totalp) VALUES ('$user_id', '$item_id', '$name', '$amount', '$note', '$total');";
+                            }
                             if(mysqli_query($con, $sqlinsert)){
                                
                             }
@@ -57,6 +86,7 @@
 
                 }
             }
+            $_SESSION['type'] = "success";
             header("Location: cart.php?message=成功更新購物車");
         }
 
@@ -65,7 +95,9 @@
         
     }
     else{
-        echo "<script>{window.alert('請登入！'); location.href='menu.php'}</script>";
+        $_SESSION['type'] = "error";
+        header("Location: menu.php?message=請登入");
+        #echo "<script>{window.alert('請登入！'); location.href='menu.php'}</script>";
     }
 
 

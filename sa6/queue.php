@@ -4,7 +4,9 @@
         $user_id = $_SESSION['user_id'];
     }
     else{
-        echo "<script>{window.alert('請先登入！'); location.href='seatcheck.php'}</script>";
+        $_SESSION['type'] = "error";
+        header("Location: seatcheck.php?message=請登入");
+        #echo "<script>{window.alert('請先登入！'); location.href='seatcheck.php'}</script>";
     }
     include("db.php");
     if(isset($_POST["name"]) && isset($_POST["people"])){
@@ -22,11 +24,15 @@
 
             $sql="insert into queue(user_id, time, people) values ('$name', '$now','$people')";
             if ($result=mysqli_query($con,$sql)){
-                echo "<script>{window.alert('新增成功！'); location.href='seatcheck.php'}</script>";
+                $_SESSION['type'] = "success";
+                header("Location: seatcheck.php?message=新增成功");
+                #echo "<script>{window.alert('新增成功！'); location.href='seatcheck.php'}</script>";
             }
         }
         else{
-            echo "<script>{window.alert('此帳號已候位，請查看候位狀態！'); location.href='seatcheck.php'}</script>";
+            $_SESSION['type'] = "error";
+            header("Location: seatcheck.php?message=此帳號已候位，請查看候位狀態！");
+            #echo "<script>{window.alert('此帳號已候位，請查看候位狀態！'); location.href='seatcheck.php'}</script>";
         }
         
     }

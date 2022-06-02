@@ -154,7 +154,7 @@
                 <h6>
                   <span style="font-family: Arial, Helvetica, sans-serif;">通知空桌</span> 
                 </h6>
-                <a href="">
+                <a href="clearseat.php">
                   CLICK
                     <g>
                       <g>

@@ -55,9 +55,11 @@
     }
 
     if($page == "unfinished"){
+        $_SESSION['type'] = "success";
         header("Location: unfinished.php?message=成功更新訂單");
     }
     elseif($page == "finished"){
+        $_SESSION['type'] = "success";
         header("Location: finished.php?message=成功更新訂單");
     }
     

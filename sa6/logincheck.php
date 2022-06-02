@@ -18,15 +18,20 @@
                 $_SESSION["phone"]=$row["phone"];
                 $_SESSION["password"]=$row["password"];
                 #header("location.href='方禾食呂首頁.php'");
-                header("Location: index.php");
+                $_SESSION['type'] = "success";
+                header("Location: index.php?message=成功登入");
             }
 
             else{
-                echo "<script>{window.alert('密碼錯誤！請再試一次'); location.href='login.php'}</script>";
+                $_SESSION['type'] = "error";
+                header("Location: login.php?message=密碼錯誤！請再試一次");
+                #echo "<script>{window.alert('密碼錯誤！請再試一次'); location.href='login.php'}</script>";
             }
         }
         else{
-            echo "<script>{window.alert('此帳號尚未註冊!請先註冊帳號');location.href='regacc.php'}</script>";
+            $_SESSION['type'] = "error";
+            header("Location: login.php?message=此帳號尚未註冊! 請先註冊");
+            #echo "<script>{window.alert('此帳號尚未註冊!請先註冊帳號');location.href='regacc.php'}</script>";
         }
     }
 

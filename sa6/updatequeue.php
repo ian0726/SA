@@ -12,6 +12,7 @@
             $sql = "DELETE FROM `queue` WHERE queue_id = ".$queue_id."";
             if($rs=mysqli_query($con, $sql)){
                 #echo "succesfully updated";
+                $_SESSION['type'] = "success";
                 header("Location: queuelist.php?message=成功更新訂單");
             }
         }
@@ -19,6 +20,7 @@
             $sql = "UPDATE `queue` SET people=".$people." WHERE queue_id=".$queue_id."";
             if($rs = mysqli_query($con, $sql)){
                 #echo "Updated successfully";
+                $_SESSION['type'] = "success";
                 header("Location: queuelist.php?message=成功更新訂單");
             }
         }

@@ -4,7 +4,9 @@
     $user_id = $_SESSION['user_id'];
   }
   else{
-    echo "<script>{window.alert('請登入！'); location.href='menu.php'}</script>";
+    $_SESSION['type'] = "error";
+    header("Location: menu.php?message=請登入");
+    #echo "<script>{window.alert('請登入！'); location.href='menu.php'}</script>";
   }
   include("db.php");
 
@@ -277,8 +279,16 @@
               <form action='sendrating.php' method='post'>
             <tr>
               <td><?php echo $order_id ?></td>
-              <td>
-                。<?php echo $rowtemp['itemfullname'] ?>  <?php echo $rowtemp['amount'] ?>份
+              <td style="text-align: left;">
+                。<?php echo $rowtemp['item_name'] ?>
+                <?php
+                if($rowtemp['sauce'] != NULL){
+                  echo $rowtemp['sauce']." ".$rowtemp['side'];
+                }
+                elseif($rowtemp['variant'] != NULL){
+                  echo $rowtemp['variant'];
+                }
+                ?>
                 <br />
               </td>
               <td>

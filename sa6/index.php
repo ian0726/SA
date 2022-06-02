@@ -87,6 +87,11 @@
 
     <?php 
     include('notification.php');
+    if(isset($_GET['message'])){
+      if(isset($_SESSION['type'])){
+        echo "<script>notify('".$_SESSION['type']."', '".$_GET['message']."')</script>";
+      }
+    }
     ?>
 
     <!-- jQery -->

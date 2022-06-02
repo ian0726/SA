@@ -5,7 +5,9 @@
     $user_id = $_SESSION['user_id'];
   }
   else{
-    echo "<script>{window.alert('請登入！'); location.href='menu.php'}</script>";
+    $_SESSION['type'] = "error";
+    header("Location: menu.php?message=請登入");
+    #echo "<script>{window.alert('請登入！'); location.href='menu.php'}</script>";
   }
   include("db.php");
 ?>
@@ -261,7 +263,11 @@
           <thead>
             <tr>
               <th>訂單流水編號</th>
-              <th>餐點及細項</th>
+              <th>餐點名稱</th>
+              <th>醬料</th>
+              <th>副餐</th>
+              <th>特殊類別</th>
+              <th>餐點數量</th>
               <th>總金額</th>
               <th>日期</th>
               <th>用餐</th>
@@ -276,27 +282,76 @@
         $item_count += 1;
         echo "<tr>
         <td>".$row['order_id']."</td>
-        <td>";
-
+        <td style='text-align: left;'>";#name
         $sqltemp = "SELECT * FROM `orderdetail` WHERE order_id ='".$row['order_id']."'";
         $rstemp = mysqli_query($con, $sqltemp);
         if($rstemp){
           while($rowtemp = mysqli_fetch_assoc($rstemp)){
-            echo"。".$rowtemp['itemfullname']."  ".$rowtemp['amount']."份<br>
-            ";
+            echo"。".$rowtemp['item_name']."";
+            echo"<br>";
           }
         }
-        if($row['place'] == 'here'){
-          $place = "內用";
-        }
-        elseif($row['place'] == 'go'){
-          $place = "外帶";
-        }
+        $place = $row['place'];
         echo "
         </td>
+        <td>";#sauce
+        $sqltemp = "SELECT * FROM `orderdetail` WHERE order_id ='".$row['order_id']."'";
+        $rstemp = mysqli_query($con, $sqltemp);
+        if($rstemp){
+          while($rowtemp = mysqli_fetch_assoc($rstemp)){
+            if($rowtemp['sauce'] != NULL){
+              echo $rowtemp['sauce'];
+            }
+            else{
+              echo "無";
+            }
+            echo"<br>";
+          }
+        }
+        echo"</td>
+        <td>";#side
+        $sqltemp = "SELECT * FROM `orderdetail` WHERE order_id ='".$row['order_id']."'";
+        $rstemp = mysqli_query($con, $sqltemp);
+        if($rstemp){
+          while($rowtemp = mysqli_fetch_assoc($rstemp)){
+            if($rowtemp['side'] != NULL){
+              echo $rowtemp['side'];
+            }
+            else{
+              echo "無";
+            }
+            echo"<br>";
+          }
+        }
+        echo"</td>
+        <td>";#variant
+        $sqltemp = "SELECT * FROM `orderdetail` WHERE order_id ='".$row['order_id']."'";
+        $rstemp = mysqli_query($con, $sqltemp);
+        if($rstemp){
+          while($rowtemp = mysqli_fetch_assoc($rstemp)){
+            if($rowtemp['variant'] != NULL){
+              echo $rowtemp['variant'];
+            }
+            else{
+              echo "無";
+            }
+            echo"<br>";
+          }
+        }
+        echo"</td>
+        <td>";#amount
+        $sqltemp = "SELECT * FROM `orderdetail` WHERE order_id ='".$row['order_id']."'";
+        $rstemp = mysqli_query($con, $sqltemp);
+        if($rstemp){
+          while($rowtemp = mysqli_fetch_assoc($rstemp)){
+            echo $rowtemp['amount']."份";
+            echo"<br>";
+          }
+        }
+        echo"</td>
         <td>$".$row['total_price']."</td>
         <td>".$row['date']."</td>
-        <td>".$place."</td>
+        <td>".$row['place']."</td>
         ";
         if($row['complete'] == 0){
           echo"<td>訂單未確認</td>";
@@ -451,6 +506,14 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js"
     integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/"
     crossorigin="anonymous"></script>
+    <?php 
+    include('notification.php');
+    if(isset($_GET['message'])){
+      if(isset($_SESSION['type'])){
+        echo "<script>notify('".$_SESSION['type']."', '".$_GET['message']."')</script>";
+      }
+    }
+    ?>
 </body>
 
 </html>

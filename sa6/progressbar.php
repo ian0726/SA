@@ -5,7 +5,9 @@
     $user_id = $_SESSION['user_id'];
   }
   else{
-    echo "<script>{window.alert('請登入！'); location.href='menu.php'}</script>";
+    $_SESSION['type'] = "error";
+    header("Location: menu.php?message=請登入");
+    #echo "<script>{window.alert('請登入！'); location.href='menu.php'}</script>";
   }
   include("db.php");
 ?>
@@ -97,6 +99,10 @@
             z-index: 10;
             width: 450px;
             font-size: 20px;
+        }
+        .desc{
+          color: #949494;
+          font-size: 18px;
         }
         .boxed{
           width: 25px;
@@ -314,8 +320,19 @@
           $rstemp = mysqli_query($con, $sqltemp);
           while($rowtemp = mysqli_fetch_assoc($rstemp)){
             echo "
-              <li><span class='boxed'>".$rowtemp['amount']."</span> ".$rowtemp['itemfullname']."</li>
-              <hr>
+              <li><span class='boxed'>".$rowtemp['amount']."</span> ".$rowtemp['item_name']."</li>";
+              if($rowtemp['sauce'] != NULL || $rowtemp['variant'] != NULL){
+                echo "<div class='desc'>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ";
+                if($rowtemp['sauce'] != NULL){
+                  echo $rowtemp['sauce']." ".$rowtemp['side'];
+                }
+                elseif($rowtemp['variant'] != NULL){
+                  echo $rowtemp['variant'];
+                }
+              }
+              
+              echo"
+              </div><hr>
             ";
           }
           echo "<div class='list-bottom'>總計金額：$".$sum."</div>";
