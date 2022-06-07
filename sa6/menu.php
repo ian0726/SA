@@ -368,8 +368,8 @@ include("db.php");
           ?>
         </div>
         <br><br>
-        <center style='padding-top: 20px;'><h3>好評餐點榜</h3></center>
-        <div class='table-outbox'>
+        <center style='padding-top: 20px;'><h3 class="推薦餐點">好評餐點榜</h3></center>
+        <div class='table-outbox 推薦餐點'>
         <table>
             <thead>
               <tr>

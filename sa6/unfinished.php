@@ -73,6 +73,7 @@
       <th>備註</th>
       <th>訂單金額</th>
       <th>使用者名稱</th>
+      <th>違規次數</th>
       <th>日期</th>
       <th>用餐</th>
       <th>狀態</th>
@@ -96,7 +97,7 @@
         if($rstemp){
           while($rowtemp = mysqli_fetch_assoc($rstemp)){
             echo"。".$rowtemp['item_name']."";
-            echo"<br>";
+            echo"<br><hr>";
           }
         }
         $place = $row['place'];
@@ -113,7 +114,7 @@
             else{
               echo "無";
             }
-            echo"<br>";
+            echo"<br><hr>";
           }
         }
         echo"</td>
@@ -128,7 +129,7 @@
             else{
               echo "無";
             }
-            echo"<br>";
+            echo"<br><hr>";
           }
         }
         echo"</td>
@@ -143,7 +144,7 @@
             else{
               echo "無";
             }
-            echo"<br>";
+            echo"<br><hr>";
           }
         }
         echo"</td>
@@ -153,7 +154,7 @@
         if($rstemp){
           while($rowtemp = mysqli_fetch_assoc($rstemp)){
             echo $rowtemp['amount']."份";
-            echo"<br>";
+            echo"<br><hr>";
           }
         }
         echo"</td>
@@ -168,12 +169,21 @@
             else{
               echo "無";
             }
-            echo"<br>";
+            echo"<br><hr>";
           }
         }
         echo"</td>
           <td>$".$row['total_price']."</td>
           <td>".$row['user_id']."</td>
+          <td>";
+        $sqltemp = "SELECT * FROM `account` WHERE user_id ='".$row['user_id']."'";
+        $rstemp = mysqli_query($con, $sqltemp);
+        if($rstemp){
+          $rowtemp = mysqli_fetch_assoc($rstemp);
+          echo $rowtemp['block'];
+        }
+        echo"
+          </td>
           <td>".$row['date']."</td>
           <td>".$place."</td>
           ";

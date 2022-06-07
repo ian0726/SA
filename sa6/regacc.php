@@ -60,7 +60,7 @@
       <div class="row">
         <div class="col-md-6">
           <div class="form_container">
-            <form action="regacc.php" method ="post">
+            <form action="regcheck.php" method ="post">
               <div>
                 <input name="user_id" type="text" class="form-control" placeholder="請輸入帳號" style="width: 100%" required/>
               </div>
@@ -79,37 +79,12 @@
               </div>
             </form>
             <?php
-              session_start();
-              $link = mysqli_connect("localhost", "root","","sa");
-              if(isset($_POST["user_id"]) && isset($_POST["password"]) && isset($_POST["name"]) && isset($_POST["phone"])){
-                $user_id = $_POST["user_id"];
-                $password = $_POST["password"];
-                $name = $_POST["name"];
-                $phone = $_POST["phone"];
-
-                $exist = 0;
-                $sql = "SELECT * FROM account";
-                $result=mysqli_query($link,$sql);
-                while($row = mysqli_fetch_assoc($result)){
-                  if($row['user_id']==$user_id){
-                    $exist = 1;
-                  }
-                }
-                if($exist == 1){
-                  $_SESSION['type'] = "error";
-                  header("Location: regacc.php?message=此帳號已被註冊！");
-                  #echo "<script>{window.alert('此帳號已被註冊！'); location.href='regacc.php'}</script>";
-                }
-                else{
-                  $sql = "insert into account (user_id, password, name, phone, block) values ('$user_id', '$password', '$name', '$phone', 0)";
-                  if ($result=mysqli_query($link,$sql)){
-                    $_SESSION['type'] = "success";
-                    header("Location: login.php?message=註冊成功！");
-                    #echo "<script>{window.alert('註冊成功！'); location.href='login.php'}</script>";
-                  }
-                }
+            include("notification.php");
+            if(isset($_GET['message'])){
+              if(isset($_SESSION['type'])){
+                echo "<script>notify('".$_SESSION['type']."', '".$_GET['message']."')</script>";
               }
-              mysqli_close($con);
+            }
             ?>
           </div>
         </div>
