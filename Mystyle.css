@@ -1,0 +1,20 @@
+
+.link-top{
+    width: 50%;
+    height: 1px;
+    border-top: solid #ACC0D8 1px;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.wrapper {
+    min-height: calc(100% - 50px);
+}
+
+.footer {
+    height: 50px;
+}
+
