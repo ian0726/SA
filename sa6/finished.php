@@ -253,9 +253,13 @@
               $sqltemp = "SELECT * FROM `orderdetail` WHERE feedback IS NOT NULL AND order_id ='" . $row['order_id'] . "'";
               if ($rstemp = mysqli_query($con, $sqltemp)) {
                 while ($rowtemp = mysqli_fetch_assoc($rstemp)) {
+                  $sqlitem = "SELECT `name` FROM item WHERE item_id = ".$rowtemp['item_id']."";
+                  $rsitem = mysqli_query($con, $sqlitem);
+                  $rowitem = mysqli_fetch_assoc($rsitem);
+                  $item_name = $rowitem['name'];
                   echo "
                         <input type='hidden' name = 'id[]' value = '" . $rowtemp['det_id'] . "'>
-                        <h5>&nbsp&nbsp。" . $rowtemp['itemfullname'] . "</h5>
+                        <h5>&nbsp&nbsp。" . $item_name . "</h5>
                         <h7>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" . $rowtemp['amount'] . "份</h7><br>
                         <h7>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp備註: " . $rowtemp['note'] . "</h7><br>
                         <h7>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp評分: " . $rowtemp['rating'] . "分</h7><br>
