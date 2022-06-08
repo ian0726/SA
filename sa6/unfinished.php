@@ -96,7 +96,11 @@
         $rstemp = mysqli_query($con, $sqltemp);
         if($rstemp){
           while($rowtemp = mysqli_fetch_assoc($rstemp)){
-            echo"。".$rowtemp['item_name']."";
+            $sqlitem = "SELECT `name` FROM item WHERE item_id = ".$rowtemp['item_id']."";
+            $rsitem = mysqli_query($con, $sqlitem);
+            $rowitem = mysqli_fetch_assoc($rsitem);
+            $item_name = $rowitem['name'];
+            echo"。".$item_name"";
             echo"<br><hr>";
           }
         }
@@ -294,9 +298,13 @@
                     $sqltemp = "SELECT * FROM `orderdetail` WHERE order_id ='".$row['order_id']."'";
                     if($rstemp = mysqli_query($con, $sqltemp)){
                       while($rowtemp = mysqli_fetch_assoc($rstemp)){
+                        $sqlitem = "SELECT `name` FROM item WHERE item_id = ".$row['item_id']."";
+                        $rsitem = mysqli_query($con, $sqlitem);
+                        $rowitem = mysqli_fetch_assoc($rsitem);
+                        $item_name = $rowitem['name'];
                         echo"
                         <input type='hidden' name = 'id[]' value = '".$rowtemp['det_id']."'>
-                        <h5>&nbsp&nbsp。".$rowtemp['item_name']."</h5>
+                        <h5>&nbsp&nbsp。".$item_name"</h5>
                         <div class='form-check'>修改數量&nbsp
                           <input type='number' class='formnumber' id='exampleFormControlInput' name = 'amount[]' min='0' max='10' value = '".$rowtemp['amount']."' required style='width: 90px;'>
                         </div><br>

@@ -82,7 +82,11 @@
         $rstemp = mysqli_query($con, $sqltemp);
         if($rstemp){
           while($rowtemp = mysqli_fetch_assoc($rstemp)){
-            echo"。".$rowtemp['item_name']."";
+            $sqlitem = "SELECT `name` FROM item WHERE item_id = ".$rowtemp['item_id']."";
+            $rsitem = mysqli_query($con, $sqlitem);
+            $rowitem = mysqli_fetch_assoc($rsitem);
+            $item_name = $rowitem['name'];
+            echo"。".$item_name."";
             echo"<br>";
           }
         }
@@ -166,7 +170,18 @@
         <td>
           <a href='' data-bs-toggle='modal' data-bs-target='#exampleModal".$row['order_id']."' style='text-decoration: none; color: white;'>
             <button class='btn btn-info btn-xs btn-edit'>編輯訂單</button>
-          </a>
+          </a>";
+          $sqll = "SELECT * FROM `orderdetail` WHERE feedback IS NOT NULL AND order_id ='" . $row['order_id'] . "'";
+          if ($rss = mysqli_query($con, $sqll)) {
+            while ($roww = mysqli_fetch_assoc($rss)) {
+              echo "<a href='' data-bs-toggle='modal' data-bs-target='#exampleModall" . $roww['order_id'] . "' style='text-decoration: none; color: white;'>
+          <button class='btn btn-danger btn-xs btn-edit'>回覆評論</button>
+        </a>";
+              break;
+            }
+          }
+
+          echo "
         </td>
         </tr>";
         
@@ -190,9 +205,13 @@
                   $sqltemp = "SELECT * FROM `orderdetail` WHERE order_id ='".$row['order_id']."'";
                   if($rstemp = mysqli_query($con, $sqltemp)){
                     while($rowtemp = mysqli_fetch_assoc($rstemp)){
+                      $sqlitem = "SELECT `name` FROM item WHERE item_id = ".$rowtemp['item_id']."";
+                      $rsitem = mysqli_query($con, $sqlitem);
+                      $rowitem = mysqli_fetch_assoc($rsitem);
+                      $item_name = $rowitem['name'];
                       echo"
                       <input type='hidden' name = 'id[]' value = '".$rowtemp['det_id']."'>
-                      <h5>&nbsp&nbsp。".$rowtemp['item_name']."</h5>
+                      <h5>&nbsp&nbsp。".$item_name."</h5>
                       <div class='form-check'>修改數量&nbsp
                         <input type='number' class='formnumber' id='exampleFormControlInput' name = 'amount[]' min='0' max='10' value = '".$rowtemp['amount']."' required style='width: 90px;'>
                       </div><br>
@@ -215,7 +234,52 @@
           </div>
         </div>
           ";
-        
+          echo "
+          <div class='modal fade' id='exampleModall" . $row['order_id'] . "' tabindex='-1' aria-labelledby='exampleModalLabel'
+          aria-hidden='true'>
+            <div class='modal-dialog modal-dialog-centered modal-dialog-scrollable'>
+              <div class='modal-content' style='overflow:auto;'>
+                <div class='modal-header'>
+                  <h5 class='modal-title' id='exampleModalLabel'>訂單編號：" . $row['order_id'] . "</h5>
+                  
+                  <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                </div>
+                <div class='text-body'>
+                  <br>
+                  <form action='reply.php' method = 'post'>
+                    <input type='hidden' name = 'page' value = 'finished'>
+                    <input type='hidden' name = 'order_id' value = '" . $row['order_id'] . "'>
+              ";
+              $sqltemp = "SELECT * FROM `orderdetail` WHERE feedback IS NOT NULL AND order_id ='" . $row['order_id'] . "'";
+              if ($rstemp = mysqli_query($con, $sqltemp)) {
+                while ($rowtemp = mysqli_fetch_assoc($rstemp)) {
+                  echo "
+                        <input type='hidden' name = 'id[]' value = '" . $rowtemp['det_id'] . "'>
+                        <h5>&nbsp&nbsp。" . $rowtemp['itemfullname'] . "</h5>
+                        <h7>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" . $rowtemp['amount'] . "份</h7><br>
+                        <h7>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp備註: " . $rowtemp['note'] . "</h7><br>
+                        <h7>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp評分: " . $rowtemp['rating'] . "分</h7><br>
+                        <h7>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp評論: " . $rowtemp['feedback'] . "</h7><br>
+                        <div class='form-check'>回覆
+                          <br>
+                          <textarea type='text' id='exampleFormControlTextarea1' rows='3' cols='52' name = 'reply[]' value = '" . $rowtemp['reply'] . "'>" . $rowtemp['reply'] . "</textarea>
+                        </div><br>
+                        ";
+                }
+              }
+              echo "
+                    <br>
+                    <div class='modal-footer'>
+                      <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>取消</button>
+                      <input type='submit' class='btn btn-primary' value='送出回覆'>
+                    </div>
+                    
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+            ";
       }
       if($item_count == 0){
         echo "<center><h1>目前沒有以完成訂單</h1></center>";

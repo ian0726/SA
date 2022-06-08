@@ -287,7 +287,11 @@
         $rstemp = mysqli_query($con, $sqltemp);
         if($rstemp){
           while($rowtemp = mysqli_fetch_assoc($rstemp)){
-            echo"。".$rowtemp['item_name']."";
+            $sqlitem = "SELECT `name` FROM item WHERE item_id = ".$rowtemp['item_id']."";
+            $rsitem = mysqli_query($con, $sqlitem);
+            $rowitem = mysqli_fetch_assoc($rsitem);
+            $item_name = $rowitem['name'];
+            echo"。".$item_name."";
             echo"<br>";
           }
         }

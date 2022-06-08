@@ -29,6 +29,7 @@ function render_seat($con, $seat_id) {
 
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -232,7 +233,7 @@ function render_seat($con, $seat_id) {
             echo "<br>";
           } 
           else{
-            $sql = "SELECT people, queue_id FROM queue WHERE user_id = '" . $user_id . "'";
+            $sql = "SELECT people, queue_id, ready_time FROM queue WHERE user_id = '" . $user_id . "'";
             $rs = mysqli_query($con, $sql);
             $row = mysqli_fetch_assoc($rs);
             if(mysqli_num_rows($rs) == 0){
@@ -245,6 +246,7 @@ function render_seat($con, $seat_id) {
             }
             else{
             $queue_id = $row['queue_id'];
+            $ready_time = $row['ready_time'];
             echo "您的候位號碼為: " . $queue_id;
             echo "<br>";
             $sql = "SELECT COUNT('queue_id') AS C FROM queue WHERE queue_id < " . $queue_id . "";
@@ -254,24 +256,77 @@ function render_seat($con, $seat_id) {
             echo "前方有" . $countseat . "組正在候位";
             echo "<br>";
                  
-            $sql = "SELECT queue_id, queue.people, seating.seatnum FROM queue, seating WHERE occupied = 0 AND user_id = '" . $user_id . "'";
+            $sql = "SELECT queue_id, queue.people, seating.seat_id, seating.seatnum FROM queue, seating WHERE occupied = 0 AND user_id = '" . $user_id . "'";
             $rs = mysqli_query($con, $sql);
+            $qualify = 0;
             $cur = ''; #現在id
             $count = 0; #最高連續空桌數
             $streak = 0; #現在連續空桌數
             $var = 0;
             if($countseat == 0){
+              #get date
+              date_default_timezone_set('Asia/Taipei');
+              $today=date('Y-m-d');
+              $now=date('Y-m-d H:i:s');
+              $nowsec=strtotime($now);
+              
+              if($ready_time == NULL){
+                $sqlready = "UPDATE `queue` SET ready_time = '".$now."' WHERE queue_id = ".$queue_id."";
+                if($rsready = mysqli_query($con, $sqlready)){
+                  #echo "done";
+                }
+                $readysec = strtotime($now);
+              }
+              else{
+                $readysec = strtotime($ready_time);
+              }
+              if($nowsec - $readysec > 300){
+                echo "<font size=\"5\" color=\"red\">已超時，請重新候位</font>";
+                $sqldel = "DELETE FROM queue WHERE queue_id = ".$queue_id."";
+                $rsdel = mysqli_query($con, $sqldel);
+              }
+              else{
+                echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                $qualify = 1;
+              }
             while($row = mysqli_fetch_assoc($rs)){
-            if($row['people'] == 1){
+            if($row['people'] == 1 && $qualify == 1){
               if( $row['seatnum'] == 101 ||  $row['seatnum'] == 102 ||  $row['seatnum'] == 103 ||  $row['seatnum'] == 104 ||  $row['seatnum'] == 105 ||  $row['seatnum'] == 106 ||  $row['seatnum'] == 107 ||  $row['seatnum'] == 108 
               ||  $row['seatnum'] == 109 ||  $row['seatnum'] == 110 ||  $row['seatnum'] == 111 ||  $row['seatnum'] == 112 ||  $row['seatnum'] == 213 ||  $row['seatnum'] == 214 ||  $row['seatnum'] == 215 ||  $row['seatnum'] == 216 
               ||  $row['seatnum'] == 317 ||  $row['seatnum'] == 318 ||  $row['seatnum'] == 319 ||  $row['seatnum'] == 320 ||  $row['seatnum'] == 421 ||  $row['seatnum'] == 422 ||  $row['seatnum'] == 423 ||  $row['seatnum'] == 424){
-              echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+              
+              ?>
+              <form action = 'chooseseat.php' method = 'post'>
+              <div>
+              <h5 class='chooseatnum'>桌號(必選)</h5>
+                <div class='form-check-table overflow-auto'>
+                  <select class='choosebtn' name='tablenum' required>
+                  <option value='' hidden selected disabled>請選擇桌號</option>
+                  <?php
+                  $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                  $rseat = mysqli_query($con, $sqlseat);
+                  while($rowseat = mysqli_fetch_assoc($rseat)){
+                  ?>
+                  <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                  <?php
+                  }
+                  ?>
+                  </select>
+                </div>
+              </div>
+              <br>
+              <div>
+              <a href='seatcheck.php' ><button type='button' class='btn-chooseat'><p>確認入座</p></button></a>
+              <input type='submit' class='btn-submit' value='確認入座'>
+              </div>
+              </form>
+            <?php  
+               
               break;
               }
             }
             
-            if($row['people'] == 2 && $row['seatnum'] < 200){
+            if($row['people'] == 2 && $row['seatnum'] < 200 && $qualify == 1){
 
               if($cur == ''){
                 $cur = $row['seatnum'];
@@ -284,8 +339,50 @@ function render_seat($con, $seat_id) {
                     $var = 1;
                     $count = $streak;
                     if ($count == 1){
-                      echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
                       
+                      ?>
+                      <form action = 'chooseseat.php' method = 'post'>
+                      <div>
+                      <h5 class='chooseatnum'>請選擇要用餐的座位號碼<br>(如需選擇多個座位，請一次做選擇)</h5>
+                        <div class='form-check-table overflow-auto'>
+                          <select class='choosebtn' name='tablenum' required>
+                          <option value='' hidden selected disabled>請選擇桌號</option>
+                          <?php
+                          $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                          $rseat = mysqli_query($con, $sqlseat);
+                          while($rowseat = mysqli_fetch_assoc($rseat)){
+                          ?>
+                          <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                          <?php
+                          }
+                          ?>
+                          </select>
+                        </div>
+                      </div>
+                      <div>
+                        <div class='form-check-table overflow-auto'>
+                          <select class='choosebtn' name='tablenum2'>
+                          <option value='' hidden selected disabled>請選擇桌號</option>
+                          <?php
+                          $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                          $rseat = mysqli_query($con, $sqlseat);
+                          while($rowseat = mysqli_fetch_assoc($rseat)){
+                          ?>
+                          <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                          <?php
+                          }
+                          ?>
+                          </select>
+                        </div>
+                      </div>
+                      <br>
+                      <div>
+                      <a href='seatcheck.php' ><button type='button' class='btn-chooseat'><p>確認入座</p></button></a>
+                      <input type='submit' class='btn-submit' value='確認入座'>
+                      </div>
+                      </form>
+                      <?php
+                      break;
                     }
                   }
                 }
@@ -296,15 +393,42 @@ function render_seat($con, $seat_id) {
               }
             }
             
-            elseif($row['people'] == 2 && $row['seatnum'] > 200){
+            elseif($row['people'] == 2 && $row['seatnum'] > 200 && $qualify == 1){
               if($row['seatnum'] == 213 || $row['seatnum'] == 214 || $row['seatnum'] == 215 ||$row['seatnum'] == 216 || $row['seatnum'] == 317 || $row['seatnum'] == 318 
               || $row['seatnum'] == 319 || $row['seatnum'] == 320 ||$row['seatnum'] == 421 || $row['seatnum'] == 422 || $row['seatnum'] == 423 || $row['seatnum'] == 424){
-              echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+              
+              ?>
+              <form action = 'chooseseat.php' method = 'post'>
+              <div>
+              <h5 class='chooseatnum'>請選擇要用餐的座位號碼<br>(如需選擇多個座位，請一次做選擇)</h5>
+                <div class='form-check-table overflow-auto'>
+                  <select class='choosebtn' name='tablenum' required>
+                  <option value='' hidden selected disabled>請選擇桌號</option>
+                  <?php
+                  $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                  $rseat = mysqli_query($con, $sqlseat);
+                  while($rowseat = mysqli_fetch_assoc($rseat)){
+                  ?>
+                  <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                  <?php
+                  }
+                  ?>
+                  </select>
+                </div>
+              </div>
+
+              <br>
+              <div>
+              <a href='seatcheck.php' ><button type='button' class='btn-chooseat'><p>確認入座</p></button></a>
+              <input type='submit' class='btn-submit' value='確認入座'>
+              </div>
+              </form>
+              <?php
               break;
               }
             }
 
-            if($row['people'] == 3 && $row['seatnum'] < 200){
+            if($row['people'] == 3 && $row['seatnum'] < 200 && $qualify == 1){
               if($cur == ''){
                 $cur = $row['seatnum'];
               }
@@ -316,8 +440,66 @@ function render_seat($con, $seat_id) {
                     $var = 1;
                     $count = $streak;
                     if ($count == 2){
-                    echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
                     
+                    ?>
+                    <form action = 'chooseseat.php' method = 'post'>
+                    <div>
+                    <h5 class='chooseatnum'>請選擇要用餐的座位號碼<br>(如需選擇多個座位，請一次做選擇)</h5>
+                      <div class='form-check-table overflow-auto'>
+                        <select class='choosebtn' name='tablenum' required>
+                        <option value='' hidden selected disabled>請選擇桌號</option>
+                        <?php
+                          $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                          $rseat = mysqli_query($con, $sqlseat);
+                          while($rowseat = mysqli_fetch_assoc($rseat)){
+                          ?>
+                          <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                          <?php
+                          }
+                          ?>
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                    <div class='form-check-table overflow-auto'>
+                      <select class='choosebtn' name='tablenum2'>
+                      <option value='' hidden selected disabled>請選擇桌號</option>
+                      <?php
+                          $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                          $rseat = mysqli_query($con, $sqlseat);
+                          while($rowseat = mysqli_fetch_assoc($rseat)){
+                          ?>
+                          <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                          <?php
+                          }
+                          ?>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                  <div class='form-check-table overflow-auto'>
+                    <select class='choosebtn' name='tablenum3'>
+                    <option value='' hidden selected disabled>請選擇桌號</option>
+                    <?php
+                    $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                    $rseat = mysqli_query($con, $sqlseat);
+                    while($rowseat = mysqli_fetch_assoc($rseat)){
+                    ?>
+                    <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                    <?php
+                    }
+                    ?>
+                    </select>
+                  </div>
+                </div>
+                    <br>
+                    <div>
+                    <a href='seatcheck.php' ><button type='button' class='btn-chooseat'><p>確認入座</p></button></a>
+                    <input type='submit' class='btn-submit' value='確認入座'>
+                    </div>
+                    </form>
+                    <?php
+                    break;
                   }
                   }
                 }
@@ -328,13 +510,13 @@ function render_seat($con, $seat_id) {
               }
             }
 
-            elseif($row['people'] == 3 && $row['seatnum'] > 200){
-            if($var == 1){
-              $var = 0;
-              $cur = ''; #現在id
-              $count = 0; #最高連續空桌數
-              $streak = 0; #現在連續空桌數
-            }
+            elseif($row['people'] == 3 && $row['seatnum'] > 200 && $qualify == 1){
+              if($var == 1){
+                $var = 0;
+                $cur = '';
+                $count = 0;
+                $streak = 0;
+              }
               if($cur == 0){
                 $cur = $row['seatnum'];
               }
@@ -345,7 +527,49 @@ function render_seat($con, $seat_id) {
                   if($streak > $count){
                     $count = $streak;
                     if ($count == 1){
-                      echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                      
+                      ?>
+                      <form action = 'chooseseat.php' method = 'post'>
+                      <div>
+                      <h5 class='chooseatnum'>請選擇要用餐的座位號碼<br>(如需選擇多個座位，請一次做選擇)</h5>
+                        <div class='form-check-table overflow-auto'>
+                          <select class='choosebtn' name='tablenum' required>
+                          <option value='' hidden selected disabled>請選擇桌號</option>
+                          <?php
+                          $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                          $rseat = mysqli_query($con, $sqlseat);
+                          while($rowseat = mysqli_fetch_assoc($rseat)){
+                          ?>
+                          <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                          <?php
+                          }
+                          ?>
+                          </select>
+                        </div>
+                      </div>
+                      <div>
+                      <div class='form-check-table overflow-auto'>
+                        <select class='choosebtn' name='tablenum2'>
+                        <option value='' hidden selected disabled>請選擇桌號</option>
+                        <?php
+                        $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                        $rseat = mysqli_query($con, $sqlseat);
+                        while($rowseat = mysqli_fetch_assoc($rseat)){
+                        ?>
+                        <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                        <?php
+                        }
+                        ?>
+                        </select>
+                      </div>
+                    </div>
+                      <br>
+                      <div>
+                      <a href='seatcheck.php' ><button type='button' class='btn-chooseat'><p>確認入座</p></button></a>
+                      <input type='submit' class='btn-submit' value='確認入座'>
+                      </div>
+                      </form>
+                      <?php
                     }
                   }
                 }
@@ -356,7 +580,7 @@ function render_seat($con, $seat_id) {
               }  
             }
 
-            if($row['people'] == 4 && $row['seatnum'] < 200){
+            if($row['people'] == 4 && $row['seatnum'] < 200 && $qualify == 1){
               if($cur == ''){
                 $cur = $row['seatnum'];
               }
@@ -368,7 +592,82 @@ function render_seat($con, $seat_id) {
                     $var = 1;
                     $count = $streak;
                     if ($count == 3){
-                      echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                      
+                      ?>
+                      <form action = 'chooseseat.php' method = 'post'>
+                      <div>
+                      <h5 class='chooseatnum'>請選擇要用餐的座位號碼<br>(如需選擇多個座位，請一次做選擇)</h5>
+                        <div class='form-check-table overflow-auto'>
+                          <select class='choosebtn' name='tablenum' required>
+                          <option value='' hidden selected disabled>請選擇桌號</option>
+                          <?php
+                          $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                          $rseat = mysqli_query($con, $sqlseat);
+                          while($rowseat = mysqli_fetch_assoc($rseat)){
+                          ?>
+                          <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                          <?php
+                          }
+                          ?>
+                          </select>
+                        </div>
+                      </div>
+                      <div>
+                      <div class='form-check-table overflow-auto'>
+                        <select class='choosebtn' name='tablenum2'>
+                        <option value='' hidden selected disabled>請選擇桌號</option>
+                        <?php
+                        $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                        $rseat = mysqli_query($con, $sqlseat);
+                        while($rowseat = mysqli_fetch_assoc($rseat)){
+                        ?>
+                        <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                        <?php
+                        }
+                        ?>
+                        </select>
+                        </div>
+                      </div>
+                      <div>
+                      <div class='form-check-table overflow-auto'>
+                        <select class='choosebtn' name='tablenum3'>
+                        <option value='' hidden selected disabled>請選擇桌號</option>
+                        <?php
+                        $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                        $rseat = mysqli_query($con, $sqlseat);
+                        while($rowseat = mysqli_fetch_assoc($rseat)){
+                        ?>
+                        <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                        <?php
+                        }
+                        ?>
+                        </select>
+                      </div>
+                      </div>
+                      <div>
+                      <div class='form-check-table overflow-auto'>
+                        <select class='choosebtn' name='tablenum4'>
+                        <option value='' hidden selected disabled>請選擇桌號</option>
+                        <?php
+                        $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                        $rseat = mysqli_query($con, $sqlseat);
+                        while($rowseat = mysqli_fetch_assoc($rseat)){
+                        ?>
+                        <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                        <?php
+                        }
+                        ?>
+                        </select>
+                      </div>
+                    </div>
+                      <br>
+                      <div>
+                      <a href='seatcheck.php' ><button type='button' class='btn-chooseat'><p>確認入座</p></button></a>
+                      <input type='submit' class='btn-submit' value='確認入座'>
+                      </div>
+                      </form>
+                      <?php
+                      break;
                     }
                   }
                 }
@@ -379,13 +678,13 @@ function render_seat($con, $seat_id) {
               }  
             }
 
-            elseif($row['people'] == 4 && $row['seatnum'] > 200){
-            if($var == 1){
-              $var = 0;
-              $cur = ''; #現在id
-              $count = 0; #最高連續空桌數
-              $streak = 0; #現在連續空桌數
-            }
+            elseif($row['people'] == 4 && $row['seatnum'] > 200 && $qualify == 1){
+              if($var == 1){
+                $var = 0;
+                $cur = '';
+                $count = 0;
+                $streak = 0;
+              }
               if($cur == ''){
                 $cur = $row['seatnum'];
               }
@@ -396,7 +695,49 @@ function render_seat($con, $seat_id) {
                   if($streak > $count){
                     $count = $streak;
                     if ($count == 1){
-                      echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                      
+                      ?>
+                      <form action = 'chooseseat.php' method = 'post'>
+                      <div>
+                      <h5 class='chooseatnum'>請選擇要用餐的座位號碼<br>(如需選擇多個座位，請一次做選擇)</h5>
+                        <div class='form-check-table overflow-auto'>
+                          <select class='choosebtn' name='tablenum' required>
+                          <option value='' hidden selected disabled>請選擇桌號</option>
+                          <?php
+                          $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                          $rseat = mysqli_query($con, $sqlseat);
+                          while($rowseat = mysqli_fetch_assoc($rseat)){
+                          ?>
+                          <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                          <?php
+                          }
+                          ?>
+                          </select>
+                        </div>
+                      </div>
+                      <div>
+                      <div class='form-check-table overflow-auto'>
+                        <select class='choosebtn' name='tablenum2'>
+                        <option value='' hidden selected disabled>請選擇桌號</option>
+                        <?php
+                        $sqlseat = "SELECT seat_id FROM seating WHERE occupied = 0";
+                        $rseat = mysqli_query($con, $sqlseat);
+                        while($rowseat = mysqli_fetch_assoc($rseat)){
+                        ?>
+                        <option value='<?php echo $rowseat['seat_id'] ?>'> <?php echo $rowseat['seat_id'] ?></option>          
+                        <?php
+                        }
+                        ?>
+                        </select>
+                      </div>
+                    </div>
+                      <br>
+                      <div>
+                      <a href='seatcheck.php' ><button type='button' class='btn-chooseat'><p>確認入座</p></button></a>
+                      <input type='submit' class='btn-submit' value='確認入座'>
+                      </div>
+                      </form>
+                      <?php
                     }
                   }
                 }
@@ -406,8 +747,8 @@ function render_seat($con, $seat_id) {
                 $cur = $row['seatnum'];
               }  
             }
-            }        
-          }
+            }    
+          } 
         }
       }          
           mysqli_close($con);

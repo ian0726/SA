@@ -54,34 +54,34 @@
             if($row['sauce'] != NULL){
                 echo "yes sauce ";
                 if($row['note'] == NULL){
-                    $sql = "INSERT INTO orderdetail (item_id, order_id, item_name, sauce, side, amount) VALUES (".$row['item_id'].", ".$order_id.", '".$row['item_name']."', '".$row['sauce']."', '".$row['side']."', ".$row['amount'].");";
+                    $sql = "INSERT INTO orderdetail (item_id, order_id, sauce, side, amount) VALUES (".$row['item_id'].", ".$order_id.", '".$row['sauce']."', '".$row['side']."', ".$row['amount'].");";
                 }
                 else{
-                    $sql = "INSERT INTO orderdetail (item_id, order_id, item_name, sauce, side, note, amount) VALUES (".$row['item_id'].", ".$order_id.", '".$row['item_name']."', '".$row['sauce']."', '".$row['side']."', '".$row['note']."', ".$row['amount'].");";
+                    $sql = "INSERT INTO orderdetail (item_id, order_id, sauce, side, note, amount) VALUES (".$row['item_id'].", ".$order_id.", '".$row['sauce']."', '".$row['side']."', '".$row['note']."', ".$row['amount'].");";
                 }
                 
             }
             elseif($row['variant'] != NULL){
                 echo "yes variant ";
                 if($row['note'] == NULL){
-                    $sql = "INSERT INTO orderdetail (item_id, order_id, item_name, variant, amount) VALUES (".$row['item_id'].", ".$order_id.", '".$row['item_name']."', '".$row['variant']."', ".$row['amount'].");";
+                    $sql = "INSERT INTO orderdetail (item_id, order_id, variant, amount) VALUES (".$row['item_id'].", ".$order_id.", '".$row['variant']."', ".$row['amount'].");";
                 }
                 else{
-                    $sql = "INSERT INTO orderdetail (item_id, order_id, item_name, variant, note, amount) VALUES (".$row['item_id'].", ".$order_id.", '".$row['item_name']."', '".$row['variant']."', '".$row['note']."', ".$row['amount'].");";
+                    $sql = "INSERT INTO orderdetail (item_id, order_id, variant, note, amount) VALUES (".$row['item_id'].", ".$order_id.", '".$row['variant']."', '".$row['note']."', ".$row['amount'].");";
                 }
                 
             }
             else{
                 echo "nothing ";
                 if($row['note'] == NULL){
-                    $sql = "INSERT INTO orderdetail (item_id, order_id, item_name, amount) VALUES (".$row['item_id'].", ".$order_id.", '".$row['item_name']."', ".$row['amount'].");";
+                    $sql = "INSERT INTO orderdetail (item_id, order_id, amount) VALUES (".$row['item_id'].", ".$order_id.", ".$row['amount'].");";
                 }
                 else{
-                    $sql = "INSERT INTO orderdetail (item_id, order_id, item_name, note, amount) VALUES (".$row['item_id'].", ".$order_id.", '".$row['item_name']."', '".$row['note']."', ".$row['amount'].");";
+                    $sql = "INSERT INTO orderdetail (item_id, order_id, note, amount) VALUES (".$row['item_id'].", ".$order_id.", '".$row['note']."', ".$row['amount'].");";
                 }
                 
             }
-            #$sql = "INSERT INTO orderdetail (item_id, order_id, item_name, sauce, side, variant, note, amount) VALUES ('".$row['item_id']."', '".$order_id."', '".$row['item_name']."', '".$row['sauce']."', '".$row['side']."', '".$row['variant']."', '".$row['note']."', '".$row['amount']."');";
+            #$sql = "INSERT INTO orderdetail (item_id, order_id, sauce, side, variant, note, amount) VALUES ('".$row['item_id']."', '".$order_id."', '".$row['sauce']."', '".$row['side']."', '".$row['variant']."', '".$row['note']."', '".$row['amount']."');";
             echo $sql;
             if(mysqli_query($con, $sql)){
                 $_SESSION['type'] = "success";

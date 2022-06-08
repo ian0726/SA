@@ -77,7 +77,6 @@
             <button class='btn btn-info btn-xs btn-edit'>編輯候位</button>
           </a>
          
-        </form>
         </td>
         </tr>";
         

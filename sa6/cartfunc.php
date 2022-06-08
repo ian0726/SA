@@ -16,29 +16,29 @@
         if(isset($sauce) && isset($side)){
             $mode = 1;
             if($note != ''){
-                $sql = "INSERT INTO cart (`user_id`, item_id, item_name, sauce, side, amount, note, totalp) VALUES ('$user_id', '$id', '$name', '$sauce', '$side', '$amount', '$note', '$total');";
+                $sql = "INSERT INTO cart (`user_id`, item_id, sauce, side, amount, note, totalp) VALUES ('$user_id', '$id', '$sauce', '$side', '$amount', '$note', '$total');";
             }
             else{
-                $sql = "INSERT INTO cart (`user_id`, item_id, item_name, sauce, side, amount, totalp) VALUES ('$user_id', '$id', '$name', '$sauce', '$side', '$amount', '$total');";
+                $sql = "INSERT INTO cart (`user_id`, item_id, sauce, side, amount, totalp) VALUES ('$user_id', '$id', '$sauce', '$side', '$amount', '$total');";
             }
         }
         elseif(isset($temperature)){
             $mode = 2;
             if($note != ''){
-                $sql = "INSERT INTO cart (`user_id`, item_id, item_name, variant, amount, note, totalp) VALUES ('$user_id', '$id', '$name', '$temperature', '$amount', '$note', '$total');";
+                $sql = "INSERT INTO cart (`user_id`, item_id, variant, amount, note, totalp) VALUES ('$user_id', '$id', '$temperature', '$amount', '$note', '$total');";
             }
             else{
-                $sql = "INSERT INTO cart (`user_id`, item_id, item_name, variant, amount, totalp) VALUES ('$user_id', '$id', '$name', '$temperature', '$amount', '$total');";
+                $sql = "INSERT INTO cart (`user_id`, item_id, variant, amount, totalp) VALUES ('$user_id', '$id', '$temperature', '$amount', '$total');";
             }
         }
         else{
             $mode = 3;
             if($note != ''){
-                $sql = "INSERT INTO cart (`user_id`, item_id, item_name, amount, note, totalp) VALUES ('$user_id', '$id', '$name', '$amount', '$note', '$total');";
+                $sql = "INSERT INTO cart (`user_id`, item_id, amount, note, totalp) VALUES ('$user_id', '$id', '$amount', '$note', '$total');";
 
             }
             else{
-                $sql = "INSERT INTO cart (`user_id`, item_id, item_name, amount, totalp) VALUES ('$user_id', '$id', '$name', '$amount', '$total');";
+                $sql = "INSERT INTO cart (`user_id`, item_id, amount, totalp) VALUES ('$user_id', '$id', '$amount', '$total');";
             }
         }
 

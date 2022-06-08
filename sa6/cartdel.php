@@ -1,18 +1,18 @@
 <?php
     include("db.php");
     $user_id = $_POST['user_id'];
-    $name = $_POST['name'];
+    $item_id = $_POST['item_id'];
     $sauce = $_POST['sauce'];
     $side = $_POST['side'];
     $variant = $_POST['variant'];
     if($sauce != '' && $side != ''){
-        $sql = "DELETE FROM cart WHERE `user_id` = '".$user_id."' AND item_name = '".$name."' AND sauce = '".$sauce."' AND side = '".$side."'";
+        $sql = "DELETE FROM cart WHERE `user_id` = '".$user_id."' AND item_id = '".$item_id."' AND sauce = '".$sauce."' AND side = '".$side."'";
     }
     elseif($variant != ''){
-        $sql = "DELETE FROM cart WHERE `user_id` = '".$user_id."' AND item_name = '".$name."' AND variant = '".$variant."'";
+        $sql = "DELETE FROM cart WHERE `user_id` = '".$user_id."' AND item_id = '".$item_id."' AND variant = '".$variant."'";
     }
     else{
-        $sql = "DELETE FROM cart WHERE `user_id` = '".$user_id."' AND item_name = '".$name."'";
+        $sql = "DELETE FROM cart WHERE `user_id` = '".$user_id."' AND item_id = '".$item_id."'";
     }
    echo $sql;
     $rs = mysqli_query($con, $sql);

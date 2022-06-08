@@ -32,6 +32,7 @@ include("db.php");
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
   <!-- font awesome style -->
   <link href="css/font-awesome.min.css" rel="stylesheet" />
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 
   <!-- Custom styles for this template -->
   <link href="css/style.css" rel="stylesheet" />
@@ -40,6 +41,9 @@ include("db.php");
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
 
   <style>
+    .fa-crown{
+      color: yellow;
+    }
     .bi-star-fill {
       color: yellow;
     }
@@ -47,39 +51,32 @@ include("db.php");
     .bi-star-half {
       color: yellow;
     }
-    .table-outbox {
-      margin: 50px; /* 添加外距 */
-      box-shadow:1px 2px 2px 1px;
-      /* box-shadow: 0px 35px 50px rgba(27, 31, 49, 0.1); 添加表格陰影 */
-      background-color: white;
+
+    .comment {
+      padding: 10px;
+      margin-bottom: 20px;
     }
 
-    table {
-      border-collapse: collapse; /* 表格邊框合併 */
-      width: 100%; /* 寬度 100% */
-      /* background-color: white; 背景白色 */
+    .user {
+      font-weight: bold;
+      color: black;
     }
 
-    table thead th {
-      color: #ffffff; /* 表頭文字白色 */
-      background: #847ad1; /* 表頭背景白色 */
+    .time {
+      color: gray;
     }
 
-    table td,
-    table th {
-      text-align: center; /* 文字置中顯示 */
-      padding: 10px; /* 添加內距 */
+    .userComment {
+      color: #000;
     }
 
-    table td {
-      border-right: 1px solid #f1f1f1; /* 表格 td 右邊框顏色 */
+    .replies .comment {
+      margin-top: 20px;
+
     }
 
-    table tr:nth-child(even) {
-      background: #f8f8f8; /* 表格偶數 tr 灰色背景 */
-    }
-    .btn-warning{
-      margin-top:3px;
+    .replies {
+      margin-left: 20px;
     }
   </style>
 </head>
@@ -124,8 +121,24 @@ include("db.php");
           <?php
           $result = mysqli_query($con, "SELECT * FROM `item` WHERE av = 1 ORDER BY category");
           while ($row = mysqli_fetch_assoc($result)) {
+            $isrec = 0;
+            $sqlrec = "SELECT item.item_id, round(AVG(orderdetail.rating),2) AS avgmeal FROM `item`, `orderdetail` WHERE item.item_id = orderdetail.item_id GROUP BY orderdetail.item_id ORDER BY avgmeal DESC LIMIT 5";
+            $rsrec = mysqli_query($con, $sqlrec);
+            while($rowrec = mysqli_fetch_assoc($rsrec)){
+              if($rowrec['item_id'] == $row['item_id']){
+                if($rowrec['avgmeal']>0){
+                  $isrec = 1;
+                }
+               
+              }
+            }
+            if($isrec == 1){
+              echo "<div class='col-sm-6 col-lg-4 all mt-3 ".$row['category']." 推薦餐點' style='height: 420px'>";
+            }
+            elseif($isrec == 0){
+              echo "<div class='col-sm-6 col-lg-4 all mt-3 ".$row['category']."' style='height: 420px'>";
+            }
           ?>
-            <div class='col-sm-6 col-lg-4 all mt-3 <?php echo $row['category'] ?>' style='height: 420px'>
               <div class='box h-100'>
                 <a href='' data-bs-toggle='modal' data-bs-target='#exampleModal<?php echo $row['item_id'] ?>' style='text-decoration: none; color: white;'>
                   <div class='img-box'>
@@ -134,11 +147,23 @@ include("db.php");
                 </a>
                 <div class='detail-box'>
                   <a href='' data-bs-toggle='modal' data-bs-target='#exampleModal<?php echo $row['item_id'] ?>' style='text-decoration: none; color: white;'>
-                    <h5><?php echo $row['name'] ?></h5>
+                    <h5><?php echo $row['name'] ?> 
+                    <?php
+                    if($isrec == 1){
+                      echo"<i class='fas fa-crown'></i>";
+                    }
+                    ?>
+                    </h5>
                     <p><?php echo $row['des'] ?></p>
                   </a>
                   <div class='options'>
                     <h6>$<?php echo $row['price'] ?></h6>
+                    <a href='' data-bs-toggle='modal' data-bs-target='#exampleModalcomment<?php echo $row['item_id']?>' style='text-decoration: none; color: white;'>
+                      <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16'fill='currentColor' class='bi bi-chat-text' viewBox='0 0 16 16'>
+                        <path d='M2.678 11.894a1 1 0 0 1 .287.801 10.97 10.97 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8.06 8.06 0 0 0 8 14c3.996 0 7-2.807 7-6 0-3.192-3.004-6-7-6S1 4.808 1 8c0 1.468.617 2.83 1.678 3.894zm-.493 3.905a21.682 21.682 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a9.68 9.68 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105z'/>
+                        <path d='M4 5.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8zm0 2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5z'/>
+                      </svg>
+                    </a>
                     <a href='' data-bs-toggle='modal' data-bs-target='#exampleModal<?php echo $row['item_id'] ?>' style='text-decoration: none; color: white;'>
                     <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                   xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029"
@@ -363,58 +388,56 @@ include("db.php");
                 </div>
                 ";
             }
+            echo "
+                  <div class='modal fade' id='exampleModalcomment" . $row['item_id'] . "' tabindex='-1' aria-labelledby='exampleModalLabel'
+                      aria-hidden='true'>
+                      <div class='modal-dialog modal-dialog-centered modal-dialog-scrollable'>
+                        <div class='modal-content'>
+                          <div class='modal-header'>
+                            <h5 class='modal-title' id='exampleModalLabel'>" . $row['name'] . "</h5>
+                            <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                          </div>";
+              $commentcount = 0;
+              $sqll = "SELECT * FROM `orderdetail` WHERE item_id ='" . $row['item_id'] . "'";
+              if ($rss = mysqli_query($con, $sqll)) {
+                while ($roww = mysqli_fetch_assoc($rss)) {
+                  if ($roww['feedback'] == null) {
+                  } else {
+                    $commentcount += 1;
+                    echo "<div class='comment'>
+                              <div class='user'>使用者</div>
+                              <div class='userComment'>" . $roww['feedback'] . "</div>
+                              <div class='replies'>
+                                <div class='comment'>
+                                  <div class='user'>
+                                    店家
+                                  </div>";
+                                  if($roww['reply'] != NULL){
+                                    echo"<div class='userComment'>" . $roww['reply'] . "</div>";
+                                  }
+                                  else{
+                                    echo"<div class='userComment'>店家尚未回覆！</div>";
+                                  }
+                                  echo"
+                                </div>
+                              </div>
+                          </div>";
+                  }
+                }
+                if ($commentcount == 0) {
+                  echo "<div class = 'comment'>尚未有評論!!</div>";
+                }
+                echo "</div>
+                      </div>
+                    </div>
+                  ";
+              }
           }
           
           ?>
         </div>
         <br><br>
-        <center style='padding-top: 20px;'><h3 class="推薦餐點">好評餐點榜</h3></center>
-        <div class='table-outbox 推薦餐點'>
-        <table>
-            <thead>
-              <tr>
-              <th>餐點樣圖</th>
-              <th>熱銷餐點</th>
-              <th>評分</th>
-              <th>我也想吃</th>
-              </tr>
-            </thead>
-            <tbody>
-            <?php
-            $sqlrec = "SELECT *, round(AVG(orderdetail.rating),2) AS avgmeal FROM `item`, `orderdetail` WHERE item.item_id = orderdetail.item_id GROUP BY orderdetail.item_id ORDER BY avgmeal DESC LIMIT 5";
-            $rsrec = mysqli_query($con, $sqlrec);
-            while($rowrec = mysqli_fetch_assoc($rsrec)){
-              $avgmeal = $rowrec['avgmeal'] == 0 ? '暫無評分' : $rowrec['avgmeal'];
-            ?>
-            <tr>
-              <td>
-              <img src='<?php echo $rowrec['img'] ?> ' alt=''width="175px"/>
-              </td>
-              <td>
-              <?php
-              echo $rowrec['name'];
-              ?>
-              </td>
-              <td>
-              <?php
-              echo $avgmeal;
-              ?>
-              </td>
-              <td>
-              <a href='' data-bs-toggle='modal' data-bs-target='#exampleModal<?php echo $rowrec['item_id'] ?>' style='text-decoration: none; color: white;'>
-                <button type="button" class="btn btn-primary" >
-                    我要點餐
-                </button>
-              </a>
-              </td>
-            </tr>
-            <?php
-            }
-            mysqli_close($con);
-            ?>
-            </tbody>
-          </table>
-        </div>
+        
       <div class="btn-box">
         <a href="">
           View More

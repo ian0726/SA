@@ -319,8 +319,12 @@
           $sqltemp = "SELECT * FROM `orderdetail` WHERE order_id = ".$row['order_id']."";
           $rstemp = mysqli_query($con, $sqltemp);
           while($rowtemp = mysqli_fetch_assoc($rstemp)){
+            $sqlitem = "SELECT `name` FROM item WHERE item_id = ".$rowtemp['item_id']."";
+            $rsitem = mysqli_query($con, $sqlitem);
+            $rowitem = mysqli_fetch_assoc($rsitem);
+            $item_name = $rowitem['name'];
             echo "
-              <li><span class='boxed'>".$rowtemp['amount']."</span> ".$rowtemp['item_name']."</li>";
+              <li><span class='boxed'>".$rowtemp['amount']."</span> ".$item_name."</li>";
               if($rowtemp['sauce'] != NULL || $rowtemp['variant'] != NULL){
                 echo "<div class='desc'>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp ";
                 if($rowtemp['sauce'] != NULL){

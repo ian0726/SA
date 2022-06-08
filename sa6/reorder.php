@@ -8,7 +8,6 @@
         if($rs = mysqli_query($con, $sql)){
             while($row = mysqli_fetch_assoc($rs)){
                 $item_id = $row['item_id'];
-                $name = $row['item_name'];
                 $sauce = $row['sauce'];
                 $side = $row['side'];
                 $variant = $row['variant'];
@@ -26,13 +25,13 @@
                     #if not exist
                     if(mysqli_num_rows($rscheck) == 0){
                         if(isset($sauce)){
-                            $sqlinsert = "INSERT INTO cart (`user_id`, item_id, item_name, sauce, side, amount, note, totalp) VALUES ('$user_id', '$item_id', '$name', '$sauce', '$side', '$amount', '$note', '$total');";
+                            $sqlinsert = "INSERT INTO cart (`user_id`, item_id, sauce, side, amount, note, totalp) VALUES ('$user_id', '$item_id', '$sauce', '$side', '$amount', '$note', '$total');";
                         }
                         elseif(isset($variant)){
-                            $sqlinsert = "INSERT INTO cart (`user_id`, item_id, item_name, variant, amount, note, totalp) VALUES ('$user_id', '$item_id', '$name', '$variant', '$amount', '$note', '$total');";
+                            $sqlinsert = "INSERT INTO cart (`user_id`, item_id, variant, amount, note, totalp) VALUES ('$user_id', '$item_id', '$variant', '$amount', '$note', '$total');";
                         }
                         else{
-                            $sqlinsert = "INSERT INTO cart (`user_id`, item_id, item_name, amount, note, totalp) VALUES ('$user_id', '$item_id', '$name', '$amount', '$note', '$total');";
+                            $sqlinsert = "INSERT INTO cart (`user_id`, item_id, amount, note, totalp) VALUES ('$user_id', '$item_id', '$amount', '$note', '$total');";
                         }
                         #$sqlinsert = "INSERT INTO cart (`user_id`, item_id, itemfullname, amount, note, totalp) VALUES ('$user_id', '$item_id', '$full', '$amount', '$note', '$total');";
                         if(mysqli_query($con, $sqlinsert)){
@@ -44,38 +43,38 @@
                         $same = 0;
                         while($rowcheck = mysqli_fetch_assoc($rscheck)){
                             #check if same full
-                            if($rowcheck['item_name'] == $name && $rowcheck['sauce'] == $sauce &&$rowcheck['amount'] != $amount){
+                            if($rowcheck['item_id'] == $item_id && $rowcheck['sauce'] == $sauce &&$rowcheck['amount'] != $amount){
                                 $same = 1;
                                 $sqlupdate = "UPDATE cart SET amount = $amount, totalp = $total
-                                WHERE `user_id` = '".$user_id."' AND item_name = '".$name."' AND sauce= '".$sauce."';";
+                                WHERE `user_id` = '".$user_id."' AND item_id = '".$item_id."' AND sauce= '".$sauce."';";
                                 if(mysqli_query($con, $sqlupdate)){
                                    
                                 }
                                 
                             }
-                            elseif($rowcheck['item_name'] == $name && $rowcheck['variant'] == $variant &&$rowcheck['amount'] != $amount){
+                            elseif($rowcheck['item_id'] == $item_id && $rowcheck['variant'] == $variant &&$rowcheck['amount'] != $amount){
                                 $same = 1;
                                 $sqlupdate = "UPDATE cart SET amount = $amount, totalp = $total
-                                WHERE `user_id` = '".$user_id."' AND item_name = '".$name."' AND variant= '".$variant."';";
+                                WHERE `user_id` = '".$user_id."' AND item_id = '".$item_id."' AND variant= '".$variant."';";
                                 if(mysqli_query($con, $sqlupdate)){
                                    
                                 }
                                 
                             }
-                            elseif($rowcheck['item_name'] == $name && $rowcheck['amount'] == $amount){
+                            elseif($rowcheck['item_id'] == $item_id && $rowcheck['amount'] == $amount){
                                 $same = 1;
                                 
                             }
                         }
                         if($same == 0){
                             if(isset($sauce)){
-                                $sqlinsert = "INSERT INTO cart (`user_id`, item_id, item_name, sauce, side, amount, note, totalp) VALUES ('$user_id', '$item_id', '$name', '$sauce', '$side', '$amount', '$note', '$total');";
+                                $sqlinsert = "INSERT INTO cart (`user_id`, item_id, sauce, side, amount, note, totalp) VALUES ('$user_id', '$item_id', '$sauce', '$side', '$amount', '$note', '$total');";
                             }
                             elseif(isset($variant)){
-                                $sqlinsert = "INSERT INTO cart (`user_id`, item_id, item_name, variant, amount, note, totalp) VALUES ('$user_id', '$item_id', '$name', '$variant', '$amount', '$note', '$total');";
+                                $sqlinsert = "INSERT INTO cart (`user_id`, item_id, variant, amount, note, totalp) VALUES ('$user_id', '$item_id', '$variant', '$amount', '$note', '$total');";
                             }
                             else{
-                                $sqlinsert = "INSERT INTO cart (`user_id`, item_id, item_name, amount, note, totalp) VALUES ('$user_id', '$item_id', '$name', '$amount', '$note', '$total');";
+                                $sqlinsert = "INSERT INTO cart (`user_id`, item_id, amount, note, totalp) VALUES ('$user_id', '$item_id', '$amount', '$note', '$total');";
                             }
                             if(mysqli_query($con, $sqlinsert)){
                                
