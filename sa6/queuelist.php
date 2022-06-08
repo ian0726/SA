@@ -1,5 +1,6 @@
 
 <?php
+  session_start();
   include('db.php');
 ?>
 <!DOCTYPE html>
@@ -96,7 +97,7 @@
               <form action='updatequeue.php' method = 'post'>
                 <input type='hidden' name = 'queue_id' value = '".$row['queue_id']."'>
                     <div class='form-check'>更改人數&nbsp
-                      <input type='number' class='formnumber' id='exampleFormControlInput' name = 'people' min='0' max='10' value = '".$row['people']."' required style='width: 90px;'>
+                      <input type='number' class='formnumber' id='exampleFormControlInput' name = 'people' min='0' max='4' value = '".$row['people']."' required style='width: 90px;'>
                     </div><br>
                 <br>
                 <div class='modal-footer'>

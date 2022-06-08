@@ -1,4 +1,5 @@
 <?php
+    session_start();
     include("db.php");
     if(isset($_SESSION['user_id'])){
       $user_id = $_SESSION['user_id'];
@@ -144,9 +145,26 @@ function render_seat($con, $seat_id) {
       <img src="images/hero-bg.jpg" alt="">
     </div>
     <!-- header section strats -->
-    <?php
-      include("header.php");
-    ?>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark" style="position: fixed; width: 100%;z-index:10">
+      <a class="navbar-brand" style="font-family: Arial, Helvetica, sans-serif;" href="manage.php">方禾食呂菜單管理系統</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="unfinished.php">  <span class="sr-only">(current)</span></a>
+        </ul>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="manage.php">首頁</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="login.html">登出</a>
+          </li>
+        </ul>
+      </div>
+  </nav>
     <!-- end header section -->
   </div>
   <div class="heading_container heading_center">

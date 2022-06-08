@@ -299,12 +299,16 @@ $order_id = $_POST['order_id'];
             while ($rowtemp = mysqli_fetch_assoc($rstemp)) {
               $rating = $rowtemp['rating'];
               $feedback = $rowtemp['feedback'];
+              $sqlitem = "SELECT `name` FROM item WHERE item_id = ".$rowtemp['item_id']."";
+              $rsitem = mysqli_query($con, $sqlitem);
+              $rowitem = mysqli_fetch_assoc($rsitem);
+              $item_name = $rowitem['name'];
           ?>
               <form action='sendrating.php' method='post'>
         <tr>
           <td><?php echo $order_id ?></td>
           <td>
-            。<?php echo $rowtemp['itemfullname'] ?> <?php echo $rowtemp['amount'] ?>份
+            。<?php echo $item_name?> <?php echo $rowtemp['amount'] ?>份
             <br />
           </td>
           <td>

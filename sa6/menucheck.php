@@ -1,16 +1,6 @@
 <?php
+  session_start();
   include('db.php');
-  if(isset($_POST["av"]) && isset($_POST["des"])){
-        $av = $_POST['av'];
-        $des=$_POST["des"];
-        $item_id=$_POST["id"];
-        $sql="Update `item` set `av`=".$av." , `des`='".$des."' WHERE `item_id`= ".$item_id."";
-        if ($result=mysqli_query($con,$sql)){
-          $_SESSION['type'] = "success";
-          header("Location: menucheck.php?message=修改成功！");
-          #echo "<script>{window.alert('修改成功！'); location.href='menucheck.php'}</script>";
-        }
-    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -24,7 +14,7 @@
   <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-
+  
 </head>
 <body>
 
@@ -115,7 +105,7 @@
                             <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                           </div>
                           <div class='text-body'>
-                            <form action='menucheck.php' method = 'post'>
+                            <form action='menucheckfunc.php' method = 'post'>
                               <input type='hidden' name='id' value='".$row['item_id']."'>
                               <input type='hidden' name='iname' value='".$row['name']."'>
                               <input type='hidden' name='price' value='".$row['price']."'>
@@ -166,7 +156,7 @@
                         <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                       </div>
                       <div class='text-body'>
-                            <form action='menucheck.php' method = 'post'>
+                            <form action='menucheckfunc.php' method = 'post'>
                               <input type='hidden' name='id' value='".$row['item_id']."'>
                               <input type='hidden' name='iname' value='".$row['name']."'>
                               <input type='hidden' name='price' value='".$row['price']."'>
@@ -217,7 +207,7 @@
                         <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                       </div>
                       <div class='text-body'>
-                            <form action='menucheck.php' method = 'post'>
+                            <form action='menucheckfunc.php' method = 'post'>
                               <input type='hidden' name='id' value='".$row['item_id']."'>
                               <input type='hidden' name='iname' value='".$row['name']."'>
                               <input type='hidden' name='price' value='".$row['price']."'>
@@ -349,7 +339,7 @@
     </div>
   </footer>
   <!-- footer section -->
-
+  
   <!-- jQery -->
   <script src="js/jquery-3.4.1.min.js"></script>
   <!-- popper js -->
@@ -380,6 +370,14 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.min.js"
     integrity="sha384-skAcpIdS7UcVUC05LJ9Dxay8AXcDYfBJqt1CJ85S/CFujBsIzCIv+l9liuYLaMQ/"
     crossorigin="anonymous"></script>
+    <?php
+    include("notification.php");
+    if(isset($_GET['message'])){
+      if(isset($_SESSION['type'])){
+        echo "<script>notify('".$_SESSION['type']."', '".$_GET['message']."')</script>";
+      }
+    }
+    ?>
 </body>
 
 </html>
