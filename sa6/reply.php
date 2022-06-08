@@ -9,7 +9,9 @@ $reply = $_POST['reply'];
 
 foreach ($reply as $key => $value) {
     #echo $reply[$key];
-    $sql = "UPDATE orderdetail SET reply ='" . $reply[$key] . "' WHERE det_id=" . $id[$key] . "";
+    if($reply[$key] != ""){
+        $sql = "UPDATE orderdetail SET reply ='" . $reply[$key] . "' WHERE det_id=" . $id[$key] . "";
+    }
     if ($rs = mysqli_query($con, $sql)) {
         #echo "reply updated successfully";
     } else {

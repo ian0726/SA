@@ -264,6 +264,7 @@ function render_seat($con, $seat_id) {
             $streak = 0; #現在連續空桌數
             $var = 0;
             if($countseat == 0){
+              $badseat = 1;
               #get date
               date_default_timezone_set('Asia/Taipei');
               $today=date('Y-m-d');
@@ -286,7 +287,6 @@ function render_seat($con, $seat_id) {
                 $rsdel = mysqli_query($con, $sqldel);
               }
               else{
-                echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
                 $qualify = 1;
               }
             while($row = mysqli_fetch_assoc($rs)){
@@ -295,6 +295,8 @@ function render_seat($con, $seat_id) {
               ||  $row['seatnum'] == 109 ||  $row['seatnum'] == 110 ||  $row['seatnum'] == 111 ||  $row['seatnum'] == 112 ||  $row['seatnum'] == 213 ||  $row['seatnum'] == 214 ||  $row['seatnum'] == 215 ||  $row['seatnum'] == 216 
               ||  $row['seatnum'] == 317 ||  $row['seatnum'] == 318 ||  $row['seatnum'] == 319 ||  $row['seatnum'] == 320 ||  $row['seatnum'] == 421 ||  $row['seatnum'] == 422 ||  $row['seatnum'] == 423 ||  $row['seatnum'] == 424){
               
+                echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                $badseat = 0;
               ?>
               <form action = 'chooseseat.php' method = 'post'>
               <div>
@@ -339,7 +341,8 @@ function render_seat($con, $seat_id) {
                     $var = 1;
                     $count = $streak;
                     if ($count == 1){
-                      
+                      echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                      $badseat = 0;
                       ?>
                       <form action = 'chooseseat.php' method = 'post'>
                       <div>
@@ -397,6 +400,8 @@ function render_seat($con, $seat_id) {
               if($row['seatnum'] == 213 || $row['seatnum'] == 214 || $row['seatnum'] == 215 ||$row['seatnum'] == 216 || $row['seatnum'] == 317 || $row['seatnum'] == 318 
               || $row['seatnum'] == 319 || $row['seatnum'] == 320 ||$row['seatnum'] == 421 || $row['seatnum'] == 422 || $row['seatnum'] == 423 || $row['seatnum'] == 424){
               
+                echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                $badseat = 0;
               ?>
               <form action = 'chooseseat.php' method = 'post'>
               <div>
@@ -440,7 +445,8 @@ function render_seat($con, $seat_id) {
                     $var = 1;
                     $count = $streak;
                     if ($count == 2){
-                    
+                      echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                      $badseat = 0;
                     ?>
                     <form action = 'chooseseat.php' method = 'post'>
                     <div>
@@ -527,7 +533,8 @@ function render_seat($con, $seat_id) {
                   if($streak > $count){
                     $count = $streak;
                     if ($count == 1){
-                      
+                      echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                      $badseat = 0;
                       ?>
                       <form action = 'chooseseat.php' method = 'post'>
                       <div>
@@ -592,7 +599,8 @@ function render_seat($con, $seat_id) {
                     $var = 1;
                     $count = $streak;
                     if ($count == 3){
-                      
+                      echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                      $badseat = 0;
                       ?>
                       <form action = 'chooseseat.php' method = 'post'>
                       <div>
@@ -695,7 +703,8 @@ function render_seat($con, $seat_id) {
                   if($streak > $count){
                     $count = $streak;
                     if ($count == 1){
-                      
+                      echo "<font size=\"5\" color=\"red\">請入內用餐</font>";
+                      $badseat = 0;
                       ?>
                       <form action = 'chooseseat.php' method = 'post'>
                       <div>
@@ -752,6 +761,9 @@ function render_seat($con, $seat_id) {
         }
       }          
           mysqli_close($con);
+          if($badseat == 1){
+            echo "<font size=\"5\">未找到適合您的座位，請稍等</font>";
+          }
           ?>
 
         </div>

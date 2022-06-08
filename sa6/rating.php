@@ -343,7 +343,7 @@ $order_id = $_POST['order_id'];
                   echo "您的評論:<br>";
                   echo $feedback;
                   echo "<br>";
-                  echo "店家回復:<br>";
+                  echo "店家回覆:<br>";
                   echo $rowtemp['reply'];
                 }
               }
@@ -361,7 +361,7 @@ $order_id = $_POST['order_id'];
               $sqll = "SELECT * FROM `orderdetail` WHERE reply IS NOT NULL AND det_id ='" . $rowtemp['det_id'] . "'";
               if ($rss = mysqli_query($con, $sqll)) {
                 while ($roww = mysqli_fetch_assoc($rss)) {
-                  echo "<input type='submit' class='btn btn-success btn-xs btn-edit' value='店家已回復' disabled>";
+                  echo "<input type='submit' class='btn btn-success btn-xs btn-edit' value='店家已回覆' disabled>";
                   break;
                 }
               }

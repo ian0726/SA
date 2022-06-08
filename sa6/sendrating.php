@@ -5,7 +5,13 @@
     $detail_id = $_POST['det_id'];  
     $feedback = $_POST['feedbacktext'];
     $score = $_POST['star'];
-    $sql = "UPDATE `orderdetail` SET `rating` = $score, `feedback` = '$feedback' WHERE `det_id` = '$detail_id'";
+    if($feedback == ""){
+        $sql = "UPDATE `orderdetail` SET `rating` = $score WHERE `det_id` = '$detail_id'";
+    }
+    else{
+        $sql = "UPDATE `orderdetail` SET `rating` = $score, `feedback` = '$feedback' WHERE `det_id` = '$detail_id'";
+    }
+    
 
     if($rs = mysqli_query($con, $sql)){
         $_SESSION['type'] = "success";
