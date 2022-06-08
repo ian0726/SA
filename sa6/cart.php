@@ -338,9 +338,9 @@
     </div>
     <br>
     <div>
-        <input type ="button" class="btn-cancel" onclick="history.back()" style="font-family:NSimSun;font-weight:bold;border:none" value="回上頁">
-        <a href="menu.php" ><button type="button" class="btn-orderagain" style='font-family:NSimSun;font-weight:bold;border:none'><p>繼續加點</p></button></a>
-        <input type="submit" class="btn-finish" value="送出訂單" style='font-family:NSimSun;font-weight:bold;border:none'>
+        <input type ="button" class="btn-cancel" onclick="history.back()" style="font-family:NSimSun;font-weight:bold;border:none;vertical-align: middle;border-radius:10px;" value="回上頁">
+        <a href="menu.php" ><input type="button" class="btn-finish" style='font-family:NSimSun;font-weight:bold;border:none;vertical-align: middle;border-radius:10px;' value ="繼續加點"></a>
+        <input type="submit" class="btn-finish" value="送出訂單" style='font-family:NSimSun;font-weight:bold;border:none;vertical-align: middle;border-radius:10px;'>
     </div>
     </center>
     </form>
